@@ -6,6 +6,8 @@ import tornado.web
 import tornado.websocket
 
 from ptydash import graphing
+from ptydash import interface
+from ptydash import uimodules
 from ptydash.utils import bytes_to_base64
 
 
@@ -14,7 +16,11 @@ class DashboardHandler(tornado.web.RequestHandler):
     Handler for main dashboard view.
     """
     def get(self):
-        self.render('dashboard.html')
+        images = [
+            interface.Image('img-ws-0'),
+            interface.Image('img-ws-1'),
+        ]
+        self.render('dashboard.html', images=images)
 
 
 class DataWebSocket(tornado.websocket.WebSocketHandler):
@@ -40,7 +46,8 @@ def make_app():
         debug=True,
         template_path='templates',
         static_path='static',
-        websocket_max_message_size=1e9
+        websocket_max_message_size=1e9,
+        ui_modules=uimodules
     )
 
 

@@ -5,28 +5,8 @@
 {% block content %}
 <h1>Hello World!</h1>
 
-<script type="application/javascript">
-    const ws = new WebSocket("ws://localhost:8888/data");
-    ws.binaryType = "arraybuffer";
+{% for image in images %}
+    {% module Image(image) %}
+{% end %}
 
-    ws.onopen = function () {
-        ws.send("Hello Websocket!");
-    };
-    ws.onmessage = function (evt) {
-        const data = JSON.parse(evt.data);
-
-        for (const imageId in data.images) {
-            let img = document.getElementById(imageId);
-            if (img === null) {
-                img = document.createElement("img");
-                document.body.appendChild(img);
-                img.id = imageId;
-            }
-            img.src = 'data:image/png;base64,' + data.images[imageId];
-        }
-
-
-        setTimeout(function() { ws.send("newfig") }, 1000);
-    }
-</script>
 {% end %}
