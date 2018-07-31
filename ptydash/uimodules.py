@@ -1,3 +1,7 @@
+"""
+This module contains Tornado UIModules to display the objects defined in interface.py
+"""
+
 import tornado.web
 
 

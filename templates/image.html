@@ -1,1 +1,15 @@
-<img id="{{ image.id }}" name="image" src="{{ static_url('img/logo_100px.png') }}" alt="Graph"/>
+<div class="card col-md-6">
+
+    <img id="{{ image.id }}" name="image"
+         src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
+         class="card-img-top"
+    />
+
+    {% if image.text %}
+    <div class="card-body">
+        <div class="card-text">
+            {{ image.text }}
+        </div>
+    </div>
+    {% end %}
+</div>

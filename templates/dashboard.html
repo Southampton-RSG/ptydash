@@ -5,8 +5,10 @@
 {% block content %}
 <h1>Hello World!</h1>
 
-{% for image in images %}
-    {% module Image(image) %}
-{% end %}
+<div class="row">
+    {% for image in images %}
+        {% module Image(image) %}
+    {% end %}
+</div>
 
 {% end %}
