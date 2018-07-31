@@ -10,4 +10,9 @@ class Image(tornado.web.UIModule):
         return self.render_string('image.html', image=image)
 
     def javascript_files(self):
-        return ['image.js']
+        return []
+
+
+class Graph(Image):
+    def javascript_files(self):
+        return ['graph.js']

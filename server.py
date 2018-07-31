@@ -5,10 +5,8 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 
-from ptydash import graphing
 from ptydash import interface
 from ptydash import uimodules
-from ptydash.utils import bytes_to_base64
 
 
 class DashboardHandler(tornado.web.RequestHandler):
@@ -16,11 +14,7 @@ class DashboardHandler(tornado.web.RequestHandler):
     Handler for main dashboard view.
     """
     def get(self):
-        images = [
-            interface.Image('img-ws-0'),
-            interface.Image('img-ws-1'),
-        ]
-        self.render('dashboard.html', images=images)
+        self.render('dashboard.html', layout=self.application.layout)
 
 
 class DataWebSocket(tornado.websocket.WebSocketHandler):
@@ -28,16 +22,11 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
     Handler for WebSocket passing data to frontend.
     """
     def on_message(self, message):
-        self.write_message({
-            'images': {
-                'img-ws-0': bytes_to_base64(graphing.get_graph()),
-                'img-ws-1': bytes_to_base64(graphing.get_graph()),
-            },
-        })
+        self.write_message({'layout': self.application.layout.send_cards()})
 
 
 def make_app():
-    return tornado.web.Application(
+    app = tornado.web.Application(
         [
             (r'/', DashboardHandler),
             (r'/data', DataWebSocket),
@@ -49,6 +38,13 @@ def make_app():
         websocket_max_message_size=1e9,
         ui_modules=uimodules
     )
+
+    app.layout = interface.Layout([
+        interface.Image('img-ws-0'),
+        interface.Image('img-ws-1'),
+    ])
+
+    return app
 
 
 if __name__ == "__main__":

@@ -2,12 +2,42 @@
 
 {% block title %}Hello World!{% end %}
 
+{% block extra_head %}
+<script type="application/javascript">
+    window.onload = function() {
+        const ws = new WebSocket("ws://localhost:8888/data");
+        ws.binaryType = "arraybuffer";
+
+        ws.onopen = function () {
+            ws.send("Hello Websocket!");
+        };
+
+        ws.onmessage = function (e) {
+            const messages = JSON.parse(e.data).layout;
+
+            for (let i = 0; i < messages.length; i++) {
+                const singleMessage = messages[i];
+                const event = new MessageEvent("layout", {
+                    data: singleMessage.data
+                });
+                document.getElementById(singleMessage.id).dispatchEvent(event);
+            }
+
+            setTimeout(function() { ws.send("update") }, 1000);
+        };
+
+        window.ws = ws;
+    }
+</script>
+{% end %}
+
 {% block content %}
 <h1>Hello World!</h1>
 
 <div class="row">
-    {% for image in images %}
-        {% module Image(image) %}
+    {% for card in layout %}
+        <!-- TODO replace this with the correct UIModule -->
+        {% module Image(card) %}
     {% end %}
 </div>
 

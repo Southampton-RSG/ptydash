@@ -2,7 +2,7 @@
 
     <img id="{{ image.id }}" name="image"
          src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
-         class="card-img-top"
+         class="card-img-top img-fluid"
     />
 
     {% if image.text %}
@@ -12,4 +12,13 @@
         </div>
     </div>
     {% end %}
+
+    <script type="application/javascript">
+        var image = document.getElementById("{{ image.id }}");
+        image.addEventListener("layout", function(e) {
+            if (e.data != null) {
+                this.src = "data:image/png;base64," + e.data;
+            }
+        });
+    </script>
 </div>
