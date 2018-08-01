@@ -1,21 +1,24 @@
-<div class="card col-md-6">
+{% extends 'module.html' %}
 
-    <img id="{{ image.id }}" name="image"
+{% block content %}
+    <img id="{{ object.id }}" name="image"
          src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
          class="card-img-top img-fluid"
     />
 
-    {% if image.text %}
+    {% if object.text %}
     <div class="card-body">
         <div class="card-text">
-            {{ image.text }}
+            {{ object.text }}
         </div>
     </div>
     {% end %}
+{% end %}
 
+{% block script %}
     <script type="application/javascript">
-        var image = document.getElementById("{{ image.id }}");
-        image.addEventListener("update", function(e) {
+        var element = document.getElementById("{{ object.id }}");
+        element.addEventListener("update", function(e) {
             if (e.data != null) {
                 this.src = "data:image/png;base64," + e.data;
             }
@@ -23,9 +26,9 @@
             setTimeout(function() {
                 window.ws.send(JSON.stringify({
                     topic: "update",
-                    id: "{{ image.id }}"
+                    id: "{{ object.id }}"
                 }))
             }, 1000);
         });
     </script>
-</div>
+{% end  %}

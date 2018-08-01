@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Hello World!{% end %}
+{% block title %}Dashboard{% end %}
 
 {% block extra_head %}
 <script type="application/javascript">
@@ -32,12 +32,12 @@
 {% end %}
 
 {% block content %}
-<h1>Hello World!</h1>
+
+<div class="mt-4"></div>
 
 <div class="row">
     {% for card in layout %}
-        <!-- TODO replace this with the correct UIModule -->
-        {% module Image(card) %}
+        {% module Template(card.template, object=card) %}
     {% end %}
 </div>
 

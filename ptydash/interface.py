@@ -4,24 +4,13 @@ This module contains classes representing objects displayed on the dashboard.
 These objects are displayed using the Tornado UIModules in uimodules.py
 """
 
-
-from ptydash import graphing
-from ptydash import uimodules
-from ptydash.utils import bytes_to_base64
+import ptydash.graphing
+import ptydash.utils
 
 
 class Layout(object):
     def __init__(self, cards=None):
         self.cards = cards
-
-    def send_cards(self):
-        return [
-            {
-                'topic': 'update',
-                'id': card.id,
-                'data': card.card_message()
-            } for card in self.cards
-        ]
 
     def __getitem__(self, item):
         for card in self.cards:
@@ -34,6 +23,8 @@ class Layout(object):
 
 
 class Image(object):
+    template = 'modules/image.html'
+
     def __init__(self, id, text=None):
         """
         An auto-refreshing Image to be represented by a uimodules.Image module on the dashboard.
@@ -44,9 +35,13 @@ class Image(object):
         self.id = id
         self.text = text
 
-    def card_message(self):
-        return bytes_to_base64(graphing.get_graph())
+    def get_message(self):
+        return {
+            'topic': 'update',
+            'id': self.id,
+            'data': self.card_message()
+        }
 
-    @property
-    def uimodule(self):
-        return uimodules.Image
+    def card_message(self):
+        graph = ptydash.graphing.get_graph()
+        return ptydash.utils.bytes_to_base64(graph)

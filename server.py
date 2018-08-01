@@ -2,15 +2,14 @@
 from __future__ import absolute_import, division, print_function
 
 import json
-# import random
-# import time
+import random
+import time
 
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
 
-from ptydash import interface
-from ptydash import uimodules
+import ptydash.interface
 
 
 class DashboardHandler(tornado.web.RequestHandler):
@@ -27,25 +26,16 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
     """
     def on_message(self, message):
         message = json.loads(message)
-        # time.sleep(random.random())
+        time.sleep(random.random())
 
         if message['topic'] == 'update':
-            id = message['id']
-
-            if id == 'all':
+            if message['id'] == 'all':
                 for card in self.application.layout:
-                    self.write_message({
-                        'topic': 'update',
-                        'id': card.id,
-                        'data': card.card_message()
-                    })
+                    self.write_message(card.get_message())
 
             else:
-                self.write_message({
-                    'topic': 'update',
-                    'id': id,
-                    'data': self.application.layout[id].card_message()
-                })
+                card = self.application.layout[message['id']]
+                self.write_message(card.get_message())
 
 
 def make_app():
@@ -59,12 +49,11 @@ def make_app():
         template_path='templates',
         static_path='static',
         websocket_max_message_size=1e9,
-        ui_modules=uimodules
     )
 
-    app.layout = interface.Layout([
-        interface.Image('img-ws-0'),
-        interface.Image('img-ws-1'),
+    app.layout = ptydash.interface.Layout([
+        ptydash.interface.Image('img-ws-0'),
+        ptydash.interface.Image('img-ws-1'),
     ])
 
     return app
