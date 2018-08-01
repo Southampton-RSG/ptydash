@@ -1,0 +1,35 @@
+{% extends 'module.html' %}
+
+{% block content %}
+    <div class="mx-auto">
+        <div class="badge badge-primary">
+            <span id="{{ object.id }}"></span>
+        </div>
+    </div>
+
+    {% if object.text %}
+    <div class="card-body">
+        <div class="card-text">
+            {{ object.text }}
+        </div>
+    </div>
+    {% end %}
+{% end %}
+
+{% block script %}
+<script type="application/javascript">
+    var element = document.getElementById("{{ object.id }}");
+    element.addEventListener("update", function(e) {
+        if (e.data != null) {
+            this.textContent = e.data;
+        }
+
+        setTimeout(function() {
+            window.ws.send(JSON.stringify({
+                topic: "update",
+                id: "{{ object.id }}"
+            }))
+        }, 1000);
+    });
+</script>
+{% end  %}

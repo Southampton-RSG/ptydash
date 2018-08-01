@@ -96,3 +96,26 @@ class ImageCard(Card):
             'id': self.id,
             'data': graph_encoded
         }
+
+
+class UpdateCounterCard(Card):
+    """
+    Card that displays the number of updates that have been requested.
+
+    Use this as an example of a Card which stores state.
+    """
+    template = 'modules/updatecountercard.html'
+
+    def __init__(self, id, text=None):
+        super(UpdateCounterCard, self).__init__(id, text)
+
+        self.counter = 0
+
+    def get_message(self):
+        self.counter += 1
+
+        return {
+            'topic': 'update',
+            'id': self.id,
+            'data': self.counter
+        }

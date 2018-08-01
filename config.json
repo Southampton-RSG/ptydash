@@ -19,6 +19,11 @@
       "type": "TextCard",
       "id": "text-0",
       "text": "Lorem Ipsum"
+    },
+    {
+      "type": "UpdateCounterCard",
+      "id": "ucc-0",
+      "text": null
     }
   ]
 }
