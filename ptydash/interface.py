@@ -23,6 +23,12 @@ class Layout(object):
             } for card in self.cards
         ]
 
+    def __getitem__(self, item):
+        for card in self.cards:
+            if card.id == item:
+                return card
+        raise KeyError(item)
+
     def __iter__(self):
         return iter(self.cards)
 

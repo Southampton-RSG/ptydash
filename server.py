@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import absolute_import, division, print_function
 
+import json
+# import random
+# import time
+
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
@@ -22,7 +26,26 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
     Handler for WebSocket passing data to frontend.
     """
     def on_message(self, message):
-        self.write_message({'layout': self.application.layout.send_cards()})
+        message = json.loads(message)
+        # time.sleep(random.random())
+
+        if message['topic'] == 'update':
+            id = message['id']
+
+            if id == 'all':
+                for card in self.application.layout:
+                    self.write_message({
+                        'topic': 'update',
+                        'id': card.id,
+                        'data': card.card_message()
+                    })
+
+            else:
+                self.write_message({
+                    'topic': 'update',
+                    'id': id,
+                    'data': self.application.layout[id].card_message()
+                })
 
 
 def make_app():

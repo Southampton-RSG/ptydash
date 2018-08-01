@@ -9,21 +9,21 @@
         ws.binaryType = "arraybuffer";
 
         ws.onopen = function () {
-            ws.send("Hello Websocket!");
+            ws.send(
+                JSON.stringify({
+                    topic: "update",
+                    id: "all"
+                })
+            );
         };
 
         ws.onmessage = function (e) {
-            const messages = JSON.parse(e.data).layout;
+            const message = JSON.parse(e.data);
 
-            for (let i = 0; i < messages.length; i++) {
-                const singleMessage = messages[i];
-                const event = new MessageEvent("layout", {
-                    data: singleMessage.data
-                });
-                document.getElementById(singleMessage.id).dispatchEvent(event);
-            }
-
-            setTimeout(function() { ws.send("update") }, 1000);
+            const event = new MessageEvent("update", {
+                data: message.data
+            });
+            document.getElementById(message.id).dispatchEvent(event);
         };
 
         window.ws = ws;

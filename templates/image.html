@@ -15,10 +15,17 @@
 
     <script type="application/javascript">
         var image = document.getElementById("{{ image.id }}");
-        image.addEventListener("layout", function(e) {
+        image.addEventListener("update", function(e) {
             if (e.data != null) {
                 this.src = "data:image/png;base64," + e.data;
             }
+
+            setTimeout(function() {
+                window.ws.send(JSON.stringify({
+                    topic: "update",
+                    id: "{{ image.id }}"
+                }))
+            }, 1000);
         });
     </script>
 </div>
