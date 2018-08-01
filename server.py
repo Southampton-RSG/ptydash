@@ -44,30 +44,29 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
                     pass
 
 
-def make_app():
+def make_app(config):
     app = tornado.web.Application(
         [
             (r'/', DashboardHandler),
             (r'/data', DataWebSocket),
         ],
-        autoreload=True,
-        debug=True,
+        autoreload=config['app']['autoreload'],
+        debug=config['app']['debug'],
         template_path='templates',
         static_path='static',
     )
 
-    # TODO get this from a config file
-    app.layout = ptydash.interface.Layout([
-        ptydash.interface.ImageCard('img-ws-0'),
-        ptydash.interface.ImageCard('img-ws-1'),
-        ptydash.interface.TextCard('text-0', 'Lorem Ipsum'),
-    ])
+    app.layout = ptydash.interface.Layout.from_config(config)
 
     return app
 
 
 if __name__ == "__main__":
-    app = make_app()
-    app.listen(8888)
-    print('Starting Tornado server on http://localhost:8888')
+    with open('config.json') as f:
+        config = json.load(f)
+
+    app = make_app(config)
+    app.listen(config['app']['port'])
+
+    print('Starting Tornado server on http://localhost:{0}'.format(config['app']['port']))
     tornado.ioloop.IOLoop.current().start()

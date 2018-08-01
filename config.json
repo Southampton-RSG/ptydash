@@ -1,0 +1,24 @@
+{
+  "app": {
+    "autoreload": true,
+    "debug": true,
+    "port": 8888
+  },
+  "layout": [
+    {
+      "type": "ImageCard",
+      "id": "img-0",
+      "text": "Test image 2"
+    },
+    {
+      "type": "ImageCard",
+      "id": "img-1",
+      "text": "Test image 1"
+    },
+    {
+      "type": "TextCard",
+      "id": "text-0",
+      "text": "Lorem Ipsum"
+    }
+  ]
+}

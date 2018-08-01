@@ -16,6 +16,17 @@ class Layout(object):
     def __init__(self, cards=None):
         self.cards = cards
 
+    @classmethod
+    def from_config(cls, config):
+        cards = []
+        for item in config['layout']:
+            klass = globals()[item['type']]
+            card = klass(id=item['id'],
+                         text=item['text'])
+            cards.append(card)
+
+        return cls(cards)
+
     def __getitem__(self, item):
         for card in self.cards:
             if card.id == item:
@@ -47,15 +58,14 @@ class ImageCard(Card):
     template = 'modules/imagecard.html'
 
     def get_message(self):
+        graph = ptydash.graphing.get_graph()
+        graph_encoded = ptydash.utils.bytes_to_base64(graph)
+
         return {
             'topic': 'update',
             'id': self.id,
-            'data': self.card_message()
+            'data': graph_encoded
         }
-
-    def card_message(self):
-        graph = ptydash.graphing.get_graph()
-        return ptydash.utils.bytes_to_base64(graph)
 
 
 class TextCard(Card):
