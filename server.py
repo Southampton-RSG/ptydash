@@ -2,8 +2,6 @@
 from __future__ import absolute_import, division, print_function
 
 import json
-import random
-import time
 
 import tornado.ioloop
 import tornado.web
@@ -26,9 +24,10 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
     """
     def on_message(self, message):
         message = json.loads(message)
-        time.sleep(random.random())
 
         if message['topic'] == 'update':
+
+            # Refresh all interface blocks
             if message['id'] == 'all':
                 for card in self.application.layout:
                     try:
@@ -36,6 +35,7 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
                     except ptydash.interface.DoesNotUpdate:
                         pass
 
+            # Refresh a single interface block
             else:
                 card = self.application.layout[message['id']]
                 try:
@@ -56,6 +56,7 @@ def make_app(config):
         static_path='static',
     )
 
+    # Read UI layout from config
     app.layout = ptydash.interface.Layout.from_config(config)
 
     return app
