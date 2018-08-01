@@ -8,6 +8,10 @@ import ptydash.graphing
 import ptydash.utils
 
 
+class DoesNotUpdate(Exception):
+    pass
+
+
 class Layout(object):
     def __init__(self, cards=None):
         self.cards = cards
@@ -22,8 +26,8 @@ class Layout(object):
         return iter(self.cards)
 
 
-class Image(object):
-    template = 'modules/image.html'
+class Card(object):
+    template = None
 
     def __init__(self, id, text=None):
         """
@@ -36,6 +40,13 @@ class Image(object):
         self.text = text
 
     def get_message(self):
+        raise DoesNotUpdate(self)
+
+
+class ImageCard(Card):
+    template = 'modules/imagecard.html'
+
+    def get_message(self):
         return {
             'topic': 'update',
             'id': self.id,
@@ -45,3 +56,7 @@ class Image(object):
     def card_message(self):
         graph = ptydash.graphing.get_graph()
         return ptydash.utils.bytes_to_base64(graph)
+
+
+class TextCard(Card):
+    template = 'modules/textcard.html'

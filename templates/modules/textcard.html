@@ -1,0 +1,14 @@
+{% extends 'module.html' %}
+
+{% block content %}
+    {% if object.text %}
+    <div class="card-body">
+        <div class="card-text">
+            {{ object.text }}
+        </div>
+    </div>
+    {% end %}
+{% end %}
+
+{% block script %}
+{% end  %}

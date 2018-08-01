@@ -31,11 +31,17 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
         if message['topic'] == 'update':
             if message['id'] == 'all':
                 for card in self.application.layout:
-                    self.write_message(card.get_message())
+                    try:
+                        self.write_message(card.get_message())
+                    except ptydash.interface.DoesNotUpdate:
+                        pass
 
             else:
                 card = self.application.layout[message['id']]
-                self.write_message(card.get_message())
+                try:
+                    self.write_message(card.get_message())
+                except ptydash.interface.DoesNotUpdate:
+                    pass
 
 
 def make_app():
@@ -48,12 +54,13 @@ def make_app():
         debug=True,
         template_path='templates',
         static_path='static',
-        websocket_max_message_size=1e9,
     )
 
+    # TODO get this from a config file
     app.layout = ptydash.interface.Layout([
-        ptydash.interface.Image('img-ws-0'),
-        ptydash.interface.Image('img-ws-1'),
+        ptydash.interface.ImageCard('img-ws-0'),
+        ptydash.interface.ImageCard('img-ws-1'),
+        ptydash.interface.TextCard('text-0', 'Lorem Ipsum'),
     ])
 
     return app
