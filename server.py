@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import absolute_import, division, print_function
 
+import functools
 import json
 
 import tornado.ioloop
@@ -22,26 +23,26 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
     """
     Handler for WebSocket passing data to frontend.
     """
-    def on_message(self, message):
-        message = json.loads(message)
+    def open(self, *args, **kwargs):
+        self.card_callbacks = []
 
-        if message['topic'] == 'update':
+        for card in self.application.layout:
+            try:
+                self.write_message(card.get_message())
 
-            # Refresh all interface blocks
-            if message['id'] == 'all':
-                for card in self.application.layout:
-                    try:
-                        self.write_message(card.get_message())
-                    except ptydash.interface.DoesNotUpdate:
-                        pass
+                callback = tornado.ioloop.PeriodicCallback(
+                    functools.partial(self.update_card, card),
+                    1000
+                )
 
-            # Refresh a single interface block
-            else:
-                card = self.application.layout[message['id']]
-                try:
-                    self.write_message(card.get_message())
-                except ptydash.interface.DoesNotUpdate:
-                    pass
+                callback.start()
+                self.card_callbacks.append(callback)
+
+            except ptydash.interface.DoesNotUpdate:
+                pass
+
+    def update_card(self, card):
+            self.write_message(card.get_message())
 
 
 def make_app(config):

@@ -23,13 +23,6 @@
         if (e.data != null) {
             this.textContent = e.data;
         }
-
-        setTimeout(function() {
-            window.ws.send(JSON.stringify({
-                topic: "update",
-                id: "{{ object.id }}"
-            }))
-        }, 1000);
     });
 </script>
 {% end  %}
