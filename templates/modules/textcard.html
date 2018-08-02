@@ -1,6 +1,4 @@
-{% extends 'module.html' %}
-
-{% block content %}
+<div id="{{ object.id }}" class="card col-md-6">
     {% if object.text %}
     <div class="card-body">
         <div class="card-text">
@@ -8,7 +6,4 @@
         </div>
     </div>
     {% end %}
-{% end %}
-
-{% block script %}
-{% end  %}
+</div>

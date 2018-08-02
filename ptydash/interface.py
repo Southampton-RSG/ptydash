@@ -94,7 +94,9 @@ class ImageCard(Card):
         return {
             'topic': 'update',
             'id': self.id,
-            'data': graph_encoded
+            'data': {
+                'image': graph_encoded,
+            }
         }
 
 
@@ -117,5 +119,7 @@ class UpdateCounterCard(Card):
         return {
             'topic': 'update',
             'id': self.id,
-            'data': self.counter
+            'data': {
+                'count': self.counter,
+            }
         }
