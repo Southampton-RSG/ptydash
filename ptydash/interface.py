@@ -2,6 +2,8 @@
 This module contains classes representing objects displayed on the dashboard.
 """
 
+import io
+
 import ptydash.graphing
 import ptydash.utils
 
@@ -121,5 +123,61 @@ class UpdateCounterCard(Card):
             'id': self.id,
             'data': {
                 'count': self.counter,
+            }
+        }
+
+
+class PtyPyClientCard(Card):
+    """
+    A Card representing a PtyPy client which auto-refreshes.
+    """
+    template = 'modules/ptypyclientcard.html'
+
+    def __init__(self, id, text=None):
+        from ptypy.core.ptycho import DEFAULT_autoplot
+        from ptypy.utils import plot_client
+
+        super(PtyPyClientCard, self).__init__(id, text)
+
+        self.config = DEFAULT_autoplot.copy(depth=3)
+
+        self.pc = plot_client.PlotClient()
+        self.pc.start()
+
+        self.plotter = plot_client.MPLplotter()
+
+        self.initialized = False
+
+    def get_message(self):
+        status = self.pc.status
+        graph_encoded = None
+
+        if status == self.pc.DATA:
+            self.plotter.pr, self.plotter.ob, runtime = self.pc.get_data()
+            self.plotter.runtime.update(runtime)
+
+            if not self.initialized:
+                if self.pc.config:
+                    self.config.update(self.pc.config)
+
+                self.plotter.update_plot_layout(self.config.layout)
+                self.initialized = True
+
+            self.plotter.plot_all()
+            self.plotter.draw()
+
+            buffer = io.BytesIO()
+            self.plotter.plot_fig.savefig(buffer, format='png')
+            buffer.seek(0)
+
+            graph_encoded = ptydash.utils.bytes_to_base64(buffer.read())
+
+        return {
+            'topic': 'update',
+            'id': self.id,
+            'data': {
+                'connected': self.pc.client.connected,
+                'status': self.pc.status,
+                'image': graph_encoded,
             }
         }

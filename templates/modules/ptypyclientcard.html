@@ -1,0 +1,40 @@
+<div id="{{ object.id }}" class="card col-md-6">
+    <img src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
+         class="propertyImage card-img-top img-fluid"
+    />
+
+    {% if object.text %}
+    <div class="card-body">
+        <div class="card-text">
+            {{ object.text }}
+        </div>
+    </div>
+    {% end %}
+
+    <div class="card-footer text-muted">
+        Connected? <span class="propertyConnected"></span>
+        <br>
+        Status: <span class="propertyStatus"></span>
+    </div>
+
+    <script type="application/javascript">
+        var element = document.getElementById("{{ object.id }}");
+        element.addEventListener("update", function(e) {
+            if (e.data != null) {
+                this.querySelector(".propertyConnected").textContent = e.data["connected"] ? "Yes" : "No";
+                this.querySelector(".propertyStatus").textContent = e.data["status"];
+
+                if (e.data["image"] !== null) {
+                    this.querySelector(".propertyImage").src = "data:image/png;base64," + e.data["image"];
+                }
+            }
+
+            setTimeout(function() {
+                window.ws.send(JSON.stringify({
+                    topic: "update",
+                    id: "{{ object.id }}"
+                }))
+            }, 1000);
+        });
+    </script>
+</div>

@@ -24,6 +24,11 @@
       "type": "UpdateCounterCard",
       "id": "ucc-0",
       "text": null
+    },
+    {
+      "type": "PtyPyClientCard",
+      "id": "pcc-0",
+      "text": "PtyPy client"
     }
   ]
 }
