@@ -152,7 +152,12 @@ class PtyPyClientCard(Card):
         status = self.pc.status
         graph_encoded = None
 
-        if status == self.pc.DATA:
+        if status == self.pc.STOPPED:
+            self.pc.start()
+            self.pc._has_stopped = False
+            self.initialized = False
+
+        elif status == self.pc.DATA:
             self.plotter.pr, self.plotter.ob, runtime = self.pc.get_data()
             self.plotter.runtime.update(runtime)
 
@@ -177,7 +182,7 @@ class PtyPyClientCard(Card):
             'id': self.id,
             'data': {
                 'connected': self.pc.client.connected,
-                'status': self.pc.status,
+                'status': status,
                 'image': graph_encoded,
             }
         }
