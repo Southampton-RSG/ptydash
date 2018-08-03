@@ -1,5 +1,3 @@
-import io
-
 import ptydash.interface
 
 
@@ -68,11 +66,7 @@ class PtyPyClientCard(ptydash.interface.Card):
 
             self.plotter.plot_all()
 
-            buffer = io.BytesIO()
-            self.plotter.plot_fig.savefig(buffer, format='png')
-            buffer.seek(0)
-
-            graph_encoded = ptydash.interface.bytes_to_base64(buffer.read())
+            graph_encoded = ptydash.interface.fig_to_base64(self.plotter.plot_fig)
 
         return {
             'topic': 'update',

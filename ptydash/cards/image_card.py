@@ -1,5 +1,3 @@
-import io
-
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -9,17 +7,13 @@ import ptydash.interface
 def get_graph():
     nums = np.random.normal(0, 1, 1000)
 
+    # TODO avoid plt API so we don't need to plt.close()
     fig = plt.figure()
     fig.suptitle('Ptydash Plot')
     ax = fig.subplots()
     ax.hist(nums)
 
-    buffer = io.BytesIO()
-    fig.savefig(buffer, format='png')
-    plt.close(fig)
-    buffer.seek(0)
-
-    return buffer.read()
+    return fig
 
 
 class ImageCard(ptydash.interface.Card):
@@ -34,8 +28,9 @@ class ImageCard(ptydash.interface.Card):
 
         :return: WebSocket message dictionary
         """
-        graph = get_graph()
-        graph_encoded = ptydash.interface.bytes_to_base64(graph)
+        fig = get_graph()
+        graph_encoded = ptydash.interface.fig_to_base64(fig)
+        plt.close(fig)
 
         return {
             'topic': 'update',
