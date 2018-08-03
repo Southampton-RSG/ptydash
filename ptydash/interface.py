@@ -57,15 +57,17 @@ class Card(object):
     """
     template = None
 
-    def __init__(self, id, text=None, **kwargs):
+    def __init__(self, id, text=None, update_delay=1000, **kwargs):
         """
-        An interface element to be represented on the dashboard.
+        Init.
 
         :param id: A unique id for the element to be used to receive information via a WebSocket
         :param text: Text associated with this element - usually a description or caption
+        :param update_delay: Delay between UI updates for this card in milliseconds
         """
         self.id = id
         self.text = text
+        self.update_delay = update_delay
 
     def get_message(self):
         """
@@ -115,12 +117,24 @@ class UpdateCounterCard(Card):
     """
     template = 'modules/updatecountercard.html'
 
-    def __init__(self, id, text=None, **kwargs):
-        super(UpdateCounterCard, self).__init__(id, text)
+    def __init__(self, id, text=None, update_delay=1000, **kwargs):
+        """
+        Initialize counter.
+
+        :param id: A unique id for the element to be used to receive information via a WebSocket
+        :param text: Text associated with this element - usually a description or caption
+        :param update_delay: Delay between UI updates for this card in milliseconds
+        """
+        super(UpdateCounterCard, self).__init__(id, text, update_delay)
 
         self.counter = 0
 
     def get_message(self):
+        """
+        Create the message that must be sent via WebSocket to update this Card.
+
+        :return: WebSocket message dictionary
+        """
         self.counter += 1
 
         return {
@@ -138,25 +152,31 @@ class PtyPyClientCard(Card):
     """
     template = 'modules/ptypyclientcard.html'
 
-    def __init__(self, id, text=None, address=None, port=None):
+    def __init__(self, id, text=None, update_delay=1000,
+                 address=None, port=None):
+        """
+        Initialize PtyPy client and plotter.
+
+        :param id: A unique id for the element to be used to receive information via a WebSocket
+        :param text: Text associated with this element - usually a description or caption
+        :param update_delay: Delay between UI updates for this card in milliseconds
+        """
         from ptypy.core.ptycho import DEFAULT_autoplot
         from ptypy.io.interaction import Client_DEFAULT
         from ptypy.utils import plot_client
         from ptypy.utils.parameters import Param
 
-        super(PtyPyClientCard, self).__init__(id, text)
+        super(PtyPyClientCard, self).__init__(id, text, update_delay)
 
-        self.config = DEFAULT_autoplot.copy(depth=3)
+        self.plot_config = DEFAULT_autoplot.copy(depth=3)
 
-        client_pars = Param(Client_DEFAULT)
+        self.client_config = Param(Client_DEFAULT)
         if address is not None:
-            client_pars.address = address
+            self.client_config.address = address
         if port is not None:
-            client_pars.port = port
-        self.address = client_pars.address
-        self.port = client_pars.port
+            self.client_config.port = port
 
-        self.pc = plot_client.PlotClient(client_pars)
+        self.pc = plot_client.PlotClient(self.client_config)
         self.pc.start()
 
         self.plotter = plot_client.MPLplotter()
@@ -164,10 +184,16 @@ class PtyPyClientCard(Card):
         self.initialized = False
 
     def get_message(self):
+        """
+        Create the message that must be sent via WebSocket to update this Card.
+
+        :return: WebSocket message dictionary
+        """
         status = self.pc.status
         graph_encoded = None
 
         if status == self.pc.STOPPED:
+            # Restart client so we can connect to a new server - not just one-shot
             self.pc.start()
             self.pc._has_stopped = False
             self.initialized = False
@@ -178,13 +204,12 @@ class PtyPyClientCard(Card):
 
             if not self.initialized:
                 if self.pc.config:
-                    self.config.update(self.pc.config)
+                    self.plot_config.update(self.pc.config)
 
-                self.plotter.update_plot_layout(self.config.layout)
+                self.plotter.update_plot_layout(self.plot_config.layout)
                 self.initialized = True
 
             self.plotter.plot_all()
-            self.plotter.draw()
 
             buffer = io.BytesIO()
             self.plotter.plot_fig.savefig(buffer, format='png')

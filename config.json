@@ -23,7 +23,8 @@
     {
       "type": "UpdateCounterCard",
       "id": "ucc-0",
-      "text": null
+      "text": null,
+      "update_delay": 100
     },
     {
       "type": "PtyPyClientCard",

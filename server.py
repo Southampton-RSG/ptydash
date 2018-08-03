@@ -32,7 +32,8 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
 
                 callback = tornado.ioloop.PeriodicCallback(
                     functools.partial(self.update_card, card),
-                    2000
+                    card.update_delay,
+                    jitter=0.1
                 )
 
                 callback.start()
