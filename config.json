@@ -28,7 +28,16 @@
     {
       "type": "PtyPyClientCard",
       "id": "pcc-0",
-      "text": "PtyPy client"
+      "text": "PtyPy client",
+      "address": "tcp://127.0.0.1",
+      "port": 5560
+    },
+    {
+      "type": "PtyPyClientCard",
+      "id": "pcc-1",
+      "text": "PtyPy client 2",
+      "address": "tcp://127.0.0.1",
+      "port": 5660
     }
   ]
 }

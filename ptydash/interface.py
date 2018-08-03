@@ -2,6 +2,7 @@
 This module contains classes representing objects displayed on the dashboard.
 """
 
+import copy
 import io
 
 import ptydash.graphing
@@ -29,9 +30,13 @@ class Layout(object):
         """
         cards = []
         for item in config['layout']:
-            klass = globals()[item['type']]
-            card = klass(id=item['id'],
-                         text=item['text'])
+            item = copy.deepcopy(item)
+            type = item.pop('type')
+            id = item.pop('id')
+
+            klass = globals()[type]
+            card = klass(id,
+                         **item)
             cards.append(card)
 
         return cls(cards)
@@ -52,7 +57,7 @@ class Card(object):
     """
     template = None
 
-    def __init__(self, id, text=None):
+    def __init__(self, id, text=None, **kwargs):
         """
         An interface element to be represented on the dashboard.
 
@@ -110,7 +115,7 @@ class UpdateCounterCard(Card):
     """
     template = 'modules/updatecountercard.html'
 
-    def __init__(self, id, text=None):
+    def __init__(self, id, text=None, **kwargs):
         super(UpdateCounterCard, self).__init__(id, text)
 
         self.counter = 0
@@ -133,15 +138,25 @@ class PtyPyClientCard(Card):
     """
     template = 'modules/ptypyclientcard.html'
 
-    def __init__(self, id, text=None):
+    def __init__(self, id, text=None, address=None, port=None):
         from ptypy.core.ptycho import DEFAULT_autoplot
+        from ptypy.io.interaction import Client_DEFAULT
         from ptypy.utils import plot_client
+        from ptypy.utils.parameters import Param
 
         super(PtyPyClientCard, self).__init__(id, text)
 
         self.config = DEFAULT_autoplot.copy(depth=3)
 
-        self.pc = plot_client.PlotClient()
+        client_pars = Param(Client_DEFAULT)
+        if address is not None:
+            client_pars.address = address
+        if port is not None:
+            client_pars.port = port
+        self.address = client_pars.address
+        self.port = client_pars.port
+
+        self.pc = plot_client.PlotClient(client_pars)
         self.pc.start()
 
         self.plotter = plot_client.MPLplotter()

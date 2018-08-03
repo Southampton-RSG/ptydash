@@ -3,18 +3,35 @@
          class="property-image card-img-top img-fluid"
     />
 
-    {% if object.text %}
     <div class="card-body">
+        {% if object.text %}
         <div class="card-text">
-            {{ object.text }}
+            <p>
+                {{ object.text }}
+            </p>
         </div>
-    </div>
-    {% end %}
+        {% end %}
 
-    <div class="card-footer text-muted">
-        Connected? <span class="property-connected"></span>
-        <br>
-        Status: <span class="property-status"></span>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Address</td>
+                <td>{{ object.address }}</td>
+            </tr>
+            <tr>
+                <td>Port</td>
+                <td>{{ object.port }}</td>
+            </tr>
+            <tr>
+                <td>Connected</td>
+                <td class="property-connected"></td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td class="property-status"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <script type="application/javascript">
