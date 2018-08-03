@@ -8,12 +8,14 @@
     {
       "type": "ImageCard",
       "id": "img-0",
-      "text": "Test image 2"
+      "text": "Test image 2",
+      "update_delay": 5000
     },
     {
       "type": "ImageCard",
       "id": "img-1",
-      "text": "Test image 1"
+      "text": "Test image 1",
+      "update_delay": 5000
     },
     {
       "type": "TextCard",
@@ -24,7 +26,7 @@
       "type": "UpdateCounterCard",
       "id": "ucc-0",
       "text": null,
-      "update_delay": 100
+      "update_delay": 200
     },
     {
       "type": "PtyPyClientCard",

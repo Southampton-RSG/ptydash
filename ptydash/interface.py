@@ -2,8 +2,11 @@
 This module contains classes representing objects displayed on the dashboard.
 """
 
+import abc
 import copy
 import io
+
+import six
 
 import ptydash.graphing
 import ptydash.utils
@@ -34,9 +37,7 @@ class Layout(object):
             type = item.pop('type')
             id = item.pop('id')
 
-            klass = globals()[type]
-            card = klass(id,
-                         **item)
+            card = Card.plugins[type](id, **item)
             cards.append(card)
 
         return cls(cards)
@@ -51,7 +52,16 @@ class Layout(object):
         return iter(self.cards)
 
 
-class Card(object):
+class Plugin(type):
+    def __init__(cls, name, bases, attrs):
+        if not hasattr(cls, 'plugins'):
+            cls.plugins = {}
+
+        else:
+            cls.plugins[name] = cls
+
+
+class Card(six.with_metaclass(Plugin, object)):
     """
     An interface element to be represented on the dashboard.
     """
@@ -76,13 +86,6 @@ class Card(object):
         :return: WebSocket message dictionary
         """
         raise DoesNotUpdate(self)
-
-
-class TextCard(Card):
-    """
-    A basic Card representing a simple block of text.
-    """
-    template = 'modules/textcard.html'
 
 
 class ImageCard(Card):
