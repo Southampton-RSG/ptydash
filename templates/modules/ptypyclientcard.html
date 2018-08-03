@@ -1,8 +1,4 @@
 <div id="{{ object.id }}" class="card col-md-6">
-    <img src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
-         class="property-image card-img-top img-fluid"
-    />
-
     <div class="card-body">
         {% if object.text %}
         <div class="card-text">
@@ -40,10 +36,6 @@
             if (e.data != null) {
                 this.querySelector(".property-connected").textContent = e.data["connected"] ? "Yes" : "No";
                 this.querySelector(".property-status").textContent = e.data["status"];
-
-                if (e.data["image"] !== null) {
-                    this.querySelector(".property-image").src = "data:image/png;base64," + e.data["image"];
-                }
             }
         });
     </script>

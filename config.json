@@ -35,11 +35,18 @@
       "port": 5560
     },
     {
-      "type": "PtyPyClientCard",
-      "id": "pcc-1",
-      "text": "PtyPy client 2",
-      "address": "tcp://127.0.0.1",
-      "port": 5560
+      "type": "PtyPyPlotCard",
+      "id": "ppc-0",
+      "text": "PtyPy Plot",
+      "parent": "pcc-0",
+      "update_delay": 100
+    },
+    {
+      "type": "PtyPyPlotCard",
+      "id": "ppc-1",
+      "text": "PtyPy Plot 2",
+      "parent": "pcc-0",
+      "update_delay": 100
     }
   ]
 }

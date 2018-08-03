@@ -225,6 +225,16 @@ class PtyPyClientCard(Card):
         self.plotter = plot_client.MPLplotter()
 
         self.initialized = False
+        self.pr = None
+        self.ob = None
+        self.runtime = {}
+        self.status = self.pc.ACTIVE
+
+    def get_data(self):
+        if self.status == self.pc.DATA:
+            # self.status = self.pc.ACTIVE
+            return self.pr, self.ob, self.runtime
+        return None, None, {}
 
     def get_message(self, layout):
         """
@@ -232,40 +242,84 @@ class PtyPyClientCard(Card):
 
         :return: WebSocket message dictionary
         """
-        status = self.pc.status
-        graph_encoded = None
+        self.status = self.pc.status
 
-        if status == self.pc.STOPPED:
+        if self.status == self.pc.STOPPED:
             # Restart client so we can connect to a new server - not just one-shot
             self.pc.start()
             self.pc._has_stopped = False
             self.initialized = False
 
-        elif status == self.pc.DATA:
-            self.plotter.pr, self.plotter.ob, runtime = self.pc.get_data()
-            self.plotter.runtime.update(runtime)
+        elif self.status == self.pc.DATA:
+            self.pr, self.ob, self.runtime = self.pc.get_data()
 
             if not self.initialized:
-                if self.pc.config:
-                    self.plot_config.update(self.pc.config)
-
-                self.plotter.update_plot_layout(self.plot_config.layout)
                 self.initialized = True
-
-            self.plotter.plot_all()
-
-            buffer = io.BytesIO()
-            self.plotter.plot_fig.savefig(buffer, format='png')
-            buffer.seek(0)
-
-            graph_encoded = ptydash.utils.bytes_to_base64(buffer.read())
 
         return {
             'topic': 'update',
             'id': self.id,
             'data': {
                 'connected': self.pc.client.connected,
-                'status': status,
+                'status': self.status,
+            }
+        }
+
+
+class PtyPyPlotCard(Card):
+    template = 'modules/ptypyplotcard.html'
+
+    def __init__(self, id, text=None, update_delay=1000, parent=None, **kwargs):
+        """
+        Init.
+
+        :param id: A unique id for the element to be used to receive information via a WebSocket
+        :param text: Text associated with this element - usually a description or caption
+        :param update_delay: Delay between UI updates for this card in milliseconds
+        """
+        from ptypy.core.ptycho import DEFAULT_autoplot
+        from ptypy.utils import plot_client
+
+        super(PtyPyPlotCard, self).__init__(id, text, update_delay)
+
+        self.parent = parent
+
+        self.plot_config = DEFAULT_autoplot.copy(depth=3)
+        self.plotter = plot_client.MPLplotter()
+
+        self.initialized = False
+
+    def get_message(self, layout):
+        """
+        Create the message that must be sent via WebSocket to update this Card.
+
+        :return: WebSocket message dictionary
+        """
+        graph_encoded = None
+
+        parent = layout[self.parent]
+
+        if parent.status == parent.pc.DATA:
+            self.plotter.pr, self.plotter.ob, runtime = parent.get_data()
+            self.plotter.runtime.update(runtime)
+
+            if not self.initialized:
+                self.plotter.update_plot_layout(self.plot_config.layout)
+                self.initialized = True
+
+            if self.plotter.pr is not None and self.plotter.ob is not None:
+                self.plotter.plot_all()
+
+                buffer = io.BytesIO()
+                self.plotter.plot_fig.savefig(buffer, format='png')
+                buffer.seek(0)
+
+                graph_encoded = ptydash.utils.bytes_to_base64(buffer.read())
+
+        return {
+            'topic': 'update',
+            'id': self.id,
+            'data': {
                 'image': graph_encoded,
             }
         }
