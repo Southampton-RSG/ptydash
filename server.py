@@ -23,27 +23,35 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
     """
     Handler for WebSocket passing data to frontend.
     """
-    def open(self, *args, **kwargs):
-        self.card_callbacks = []
+    def __init__(self, *args, **kwargs):
+        super(DataWebSocket, self).__init__(*args, **kwargs)
 
+        for card in self.application.layout:
+            callback = tornado.ioloop.PeriodicCallback(
+                functools.partial(self.update_card, card),
+                card.update_delay,
+                jitter=0.1
+            )
+
+            card.callback = callback
+
+    def open(self, *args, **kwargs):
         for card in self.application.layout:
             try:
                 self.write_message(card.get_message())
-
-                callback = tornado.ioloop.PeriodicCallback(
-                    functools.partial(self.update_card, card),
-                    card.update_delay,
-                    jitter=0.1
-                )
-
-                callback.start()
-                self.card_callbacks.append(callback)
+                card.callback.start()
 
             except ptydash.interface.DoesNotUpdate:
                 pass
 
+    def on_close(self):
+        for card in self.application.layout:
+            card.callback.stop()
+
     def update_card(self, card):
-            self.write_message(card.get_message())
+        message = card.get_message()
+        if message is not None:
+            self.write_message(message)
 
 
 def make_app(config):
