@@ -69,7 +69,7 @@ class Card(object):
         self.text = text
         self.update_delay = update_delay
 
-    def get_message(self, layout):
+    def get_message(self):
         """
         Create the message that must be sent via WebSocket to update this Card.
 
@@ -91,57 +91,14 @@ class ImageCard(Card):
     """
     template = 'modules/imagecard.html'
 
-    def __init__(self, id, text=None, update_delay=1000, **kwargs):
-        """
-        Init.
-
-        :param id: A unique id for the element to be used to receive information via a WebSocket
-        :param text: Text associated with this element - usually a description or caption
-        :param update_delay: Delay between UI updates for this card in milliseconds
-        """
-        super(ImageCard, self).__init__(id, text, update_delay)
-
-        self.image = None
-
-    def get_message(self, layout):
+    def get_message(self):
         """
         Create the message that must be sent via WebSocket to update this Card.
 
         :return: WebSocket message dictionary
         """
-        self.image = ptydash.graphing.get_graph()
-        graph_encoded = ptydash.utils.bytes_to_base64(self.image)
-
-        return {
-            'topic': 'update',
-            'id': self.id,
-            'data': {
-                'image': graph_encoded,
-            }
-        }
-
-
-class ImageChildCard(Card):
-    template = 'modules/imagecard.html'
-
-    def __init__(self, id, text=None, update_delay=1000, parent=None, **kwargs):
-        """
-        Init.
-
-        :param id: A unique id for the element to be used to receive information via a WebSocket
-        :param text: Text associated with this element - usually a description or caption
-        :param update_delay: Delay between UI updates for this card in milliseconds
-        """
-        super(ImageChildCard, self).__init__(id, text, update_delay)
-
-        self.parent = parent
-
-    def get_message(self, layout):
-        image = layout[self.parent].image
-        if image is not None:
-            graph_encoded = ptydash.utils.bytes_to_base64(layout[self.parent].image)
-        else:
-            graph_encoded = ''
+        graph = ptydash.graphing.get_graph()
+        graph_encoded = ptydash.utils.bytes_to_base64(graph)
 
         return {
             'topic': 'update',
@@ -172,7 +129,7 @@ class UpdateCounterCard(Card):
 
         self.counter = 0
 
-    def get_message(self, layout):
+    def get_message(self):
         """
         Create the message that must be sent via WebSocket to update this Card.
 
@@ -226,7 +183,7 @@ class PtyPyClientCard(Card):
 
         self.initialized = False
 
-    def get_message(self, layout):
+    def get_message(self):
         """
         Create the message that must be sent via WebSocket to update this Card.
 

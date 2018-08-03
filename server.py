@@ -28,23 +28,22 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
 
         for card in self.application.layout:
             try:
-                self.write_message(card.get_message(self.application.layout))
+                self.write_message(card.get_message())
 
-                if card.update_delay > 0:
-                    callback = tornado.ioloop.PeriodicCallback(
-                        functools.partial(self.update_card, card),
-                        card.update_delay,
-                        jitter=0.1
-                    )
+                callback = tornado.ioloop.PeriodicCallback(
+                    functools.partial(self.update_card, card),
+                    card.update_delay,
+                    jitter=0.1
+                )
 
-                    callback.start()
+                callback.start()
                 self.card_callbacks.append(callback)
 
             except ptydash.interface.DoesNotUpdate:
                 pass
 
     def update_card(self, card):
-            self.write_message(card.get_message(self.application.layout))
+            self.write_message(card.get_message())
 
 
 def make_app(config):
