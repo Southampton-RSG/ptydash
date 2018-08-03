@@ -6,9 +6,10 @@
   },
   "layout": [
     {
-      "type": "ImageCard",
+      "type": "ImageChildCard",
       "id": "img-0",
-      "text": "Test image 2"
+      "text": "Test image 2",
+      "parent": "img-1"
     },
     {
       "type": "ImageCard",
@@ -38,7 +39,7 @@
       "id": "pcc-1",
       "text": "PtyPy client 2",
       "address": "tcp://127.0.0.1",
-      "port": 5660
+      "port": 5560
     }
   ]
 }
