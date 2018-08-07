@@ -1,8 +1,8 @@
-
 import threading
 import time
 import random
 import paho.mqtt.client as mqtt
+import ptydash.graphing as graph
 
 # mqtt broker
 host = "wonderbox.ecs.soton.ac.uk"
@@ -13,18 +13,12 @@ client_name = "IAMACLIENT"
 logFile = "log.txt"
 
 def on_message(client,userdata,message):
-    print("message topic=", message.topic)
-    print("message received ", str(message.payload.decode("utf-8")))
+    #print("message topic=", message.topic)
+    #print("message received ", str(message.payload.decode("utf-8")))
     # print("message qos=", message.qos)
     # print("message retain flag=", message.retain)
-    # outMsg = str(message.payload.decode("utf-8"))
-    #
-    # # change this if you're not me, obv
-    # outFile = r"C:\users\me\output.csv"
-    #
-    # f = open(outFile,"w")
-    # f.write(outMsg)
-    # f.close()
+    outMsg = str(message.payload.decode("utf-8"))
+    graph.data = outMsg
     return
 
 client = mqtt.Client(client_name)
@@ -38,9 +32,9 @@ def send_mqtt():
         lf.close()
 
         #make up some data, this should be sensors or whatever
-        temperatureReading = random.randint(1, 40)
-        humidityReading = random.randint(41,99)
-        tempAndHumid = "Temperature: " + str(temperatureReading) + ", Humidity: " + str(humidityReading)
+        temperatureReading = random.randint(0,100)
+        humidityReading = random.randint(0,100)
+        tempAndHumid = "Temperature: " + str(temperatureReading) + " Humidity: " + str(humidityReading)
 
         #example publish setting
         client.publish("datadump/tempAndHumid",tempAndHumid)

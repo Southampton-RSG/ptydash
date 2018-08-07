@@ -10,6 +10,10 @@ from ptydash import interface
 from ptydash import uimodules
 from ptydash.utils import bytes_to_base64
 
+import mqtt
+
+
+
 
 class DashboardHandler(tornado.web.RequestHandler):
     """
@@ -56,3 +60,5 @@ if __name__ == "__main__":
     app.listen(8888)
     print('Starting Tornado server on http://localhost:8888')
     tornado.ioloop.IOLoop.current().start()
+    mqtt()
+
