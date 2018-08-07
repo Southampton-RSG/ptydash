@@ -1,0 +1,24 @@
+<div id="{{ object.id }}" class="card col-md-6">
+    <div class="mx-auto">
+        <div class="badge badge-primary">
+            <span class="property-count"></span>
+        </div>
+    </div>
+
+    {% if object.text %}
+    <div class="card-body">
+        <div class="card-text">
+            {{ object.text }}
+        </div>
+    </div>
+    {% end %}
+
+    <script type="application/javascript">
+        var element = document.getElementById("{{ object.id }}");
+        element.addEventListener("update", function(e) {
+            if (e.data != null) {
+                this.querySelector(".property-count").textContent = e.data["count"];
+            }
+        });
+    </script>
+</div>

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import absolute_import, division, print_function
 
+import functools
+import json
+
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
 
-from ptydash import graphing
-from ptydash import interface
-from ptydash import uimodules
-from ptydash.utils import bytes_to_base64
+import ptydash.interface
 
 
 class DashboardHandler(tornado.web.RequestHandler):
@@ -16,43 +16,68 @@ class DashboardHandler(tornado.web.RequestHandler):
     Handler for main dashboard view.
     """
     def get(self):
-        images = [
-            interface.Image('img-ws-0'),
-            interface.Image('img-ws-1'),
-        ]
-        self.render('dashboard.html', images=images)
+        self.render('dashboard.html', layout=self.application.layout)
 
 
 class DataWebSocket(tornado.websocket.WebSocketHandler):
     """
     Handler for WebSocket passing data to frontend.
     """
-    def on_message(self, message):
-        self.write_message({
-            'images': {
-                'img-ws-0': bytes_to_base64(graphing.get_graph()),
-                'img-ws-1': bytes_to_base64(graphing.get_graph()),
-            },
-        })
+    def __init__(self, *args, **kwargs):
+        super(DataWebSocket, self).__init__(*args, **kwargs)
+
+        for card in self.application.layout:
+            callback = tornado.ioloop.PeriodicCallback(
+                functools.partial(self.update_card, card),
+                card.update_delay,
+                jitter=0.1
+            )
+
+            card.callback = callback
+
+    def open(self, *args, **kwargs):
+        for card in self.application.layout:
+            try:
+                self.write_message(card.get_message())
+                card.callback.start()
+
+            except ptydash.interface.DoesNotUpdate:
+                pass
+
+    def on_close(self):
+        for card in self.application.layout:
+            card.callback.stop()
+
+    def update_card(self, card):
+        message = card.get_message()
+        if message is not None:
+            self.write_message(message)
 
 
-def make_app():
-    return tornado.web.Application(
+def make_app(config):
+    app = tornado.web.Application(
         [
             (r'/', DashboardHandler),
             (r'/data', DataWebSocket),
         ],
-        autoreload=True,
-        debug=True,
+        autoreload=config['app']['autoreload'],
+        debug=config['app']['debug'],
         template_path='templates',
         static_path='static',
-        websocket_max_message_size=1e9,
-        ui_modules=uimodules
     )
+
+    # Read UI layout from config
+    app.layout = ptydash.interface.Layout.from_config(config)
+
+    return app
 
 
 if __name__ == "__main__":
-    app = make_app()
-    app.listen(8888)
-    print('Starting Tornado server on http://localhost:8888')
+    with open('config.json') as f:
+        config = json.load(f)
+
+    app = make_app(config)
+    app.listen(config['app']['port'])
+
+    print('Starting Tornado server on http://localhost:{0}'.format(config['app']['port']))
     tornado.ioloop.IOLoop.current().start()

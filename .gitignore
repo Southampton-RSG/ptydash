@@ -1,5 +1,7 @@
-# Python virtual environments
+# Python files and directories
 /env*
+*.pyc
+__pycache__/
 
 # IDE files
 .idea

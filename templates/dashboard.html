@@ -1,12 +1,35 @@
 {% extends 'base.html' %}
 
-{% block title %}Hello World!{% end %}
+{% block title %}Dashboard{% end %}
+
+{% block extra_head %}
+<script type="application/javascript">
+    window.onload = function() {
+        const ws = new WebSocket("ws://localhost:8888/data");
+        ws.binaryType = "arraybuffer";
+
+        ws.onmessage = function (e) {
+            const message = JSON.parse(e.data);
+
+            const event = new MessageEvent("update", {
+                data: message.data
+            });
+            document.getElementById(message.id).dispatchEvent(event);
+        };
+
+        window.ws = ws;
+    };
+</script>
+{% end %}
 
 {% block content %}
-<h1>Hello World!</h1>
 
-{% for image in images %}
-    {% module Image(image) %}
-{% end %}
+<div class="mt-4"></div>
+
+<div class="row">
+    {% for card in layout %}
+        {% module Template(card.template, object=card) %}
+    {% end %}
+</div>
 
 {% end %}
