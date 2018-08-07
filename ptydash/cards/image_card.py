@@ -7,11 +7,12 @@ import ptydash.interface
 def get_graph():
     nums = np.random.normal(0, 1, 1000)
 
-    # TODO avoid plt API so we don't need to plt.close()
-    fig = plt.figure()
-    fig.suptitle('Ptydash Plot')
-    ax = fig.subplots()
-    ax.hist(nums)
+    # TODO Is it possible to avoid having to plt.close()?
+    with ptydash.interface.MatplotlibBackend('agg'):
+        fig = plt.figure()
+        fig.suptitle('Ptydash Plot')
+        ax = fig.subplots()
+        ax.hist(nums)
 
     return fig
 

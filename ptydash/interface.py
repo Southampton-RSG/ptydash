@@ -33,6 +33,21 @@ def fig_to_base64(fig):
     return bytes_to_base64(buffer.read())
 
 
+class MatplotlibBackend(object):
+    def __init__(self, backend):
+        self.backend = backend
+
+    def __enter__(self):
+        import matplotlib.pyplot
+
+        self.old_backend = matplotlib.get_backend()
+        matplotlib.pyplot.switch_backend(self.backend)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import matplotlib.pyplot
+        matplotlib.pyplot.switch_backend(self.old_backend)
+
+
 class DoesNotUpdate(Exception):
     pass
 
