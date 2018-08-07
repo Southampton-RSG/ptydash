@@ -1,0 +1,46 @@
+{
+  "app": {
+    "autoreload": true,
+    "debug": true,
+    "port": 8888
+  },
+  "layout": [
+    {
+      "type": "ImageCard",
+      "id": "img-0",
+      "text": "Test image 2",
+      "update_delay": 5000
+    },
+    {
+      "type": "ImageCard",
+      "id": "img-1",
+      "text": "Test image 1",
+      "update_delay": 5000
+    },
+    {
+      "type": "TextCard",
+      "id": "text-0",
+      "text": "Lorem Ipsum"
+    },
+    {
+      "type": "UpdateCounterCard",
+      "id": "ucc-0",
+      "text": null,
+      "update_delay": 200
+    },
+    {
+      "type": "PtyPyClientCard",
+      "id": "pcc-0",
+      "text": "PtyPy client",
+      "address": "tcp://127.0.0.1",
+      "port": 5560
+    },
+    {
+      "type": "PtyPyClientCard",
+      "id": "pcc-1",
+      "text": "PtyPy client 2",
+      "address": "tcp://127.0.0.1",
+      "port": 5660
+    }
+  ]
+}

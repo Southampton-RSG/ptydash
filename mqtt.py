@@ -2,7 +2,7 @@ import threading
 import time
 import random
 import paho.mqtt.client as mqtt
-import ptydash.graphing as graph
+import ptydash.cards.image_card as graph
 
 # mqtt broker
 host = "wonderbox.ecs.soton.ac.uk"
