@@ -1,0 +1,15 @@
+<div id="{{ object.id }}" class="card col-md-6">
+    <video controls
+           poster="{{ static_url('img/logo_100px.png') }}">
+        <source src="{{ object.source }}"
+                {% if object.mimetype %}type="{{ object.mimetype }}"{% end %}>
+    </video>
+
+    {% if object.text %}
+    <div class="card-body">
+        <div class="card-text">
+            {{ object.text }}
+        </div>
+    </div>
+    {% end %}
+</div>
