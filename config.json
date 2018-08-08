@@ -1,6 +1,5 @@
 {
   "app": {
-    "autoreload": true,
     "debug": true,
     "port": 8888
   },

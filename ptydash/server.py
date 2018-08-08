@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import absolute_import, division, print_function
 
+import argparse
 import functools
 import json
 
@@ -54,13 +55,21 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message(message)
 
 
-def make_app(config):
+def main():
+    parser = argparse.ArgumentParser(description='Data dashboard and PtyPy monitor')
+    parser.add_argument('config', nargs='?', default='config.json')
+
+    args = parser.parse_args()
+
+    with open(args.config) as f:
+        print('Reading config from \'{0}\''.format(args.config))
+        config = json.load(f)
+
     app = tornado.web.Application(
         [
             (r'/', DashboardHandler),
             (r'/data', DataWebSocket),
         ],
-        autoreload=config['app']['autoreload'],
         debug=config['app']['debug'],
         template_path='templates',
         static_path='static',
@@ -69,18 +78,12 @@ def make_app(config):
     # Read UI layout from config
     app.layout = ptydash.interface.Layout.from_config(config)
 
-    return app
-
-
-def main():
-    with open('config.json') as f:
-        config = json.load(f)
-
-    app = make_app(config)
-    app.listen(config['app']['port'])
-
-    print('Starting PtyDash server at http://localhost:{0}'.format(config['app']['port']))
-    tornado.ioloop.IOLoop.current().start()
+    print('Starting PtyDash server on http://localhost:{0}'.format(config['app']['port']))
+    try:
+        app.listen(config['app']['port'])
+        tornado.ioloop.IOLoop.current().start()
+    except KeyboardInterrupt:
+        print('Shutting down...')
 
 
 if __name__ == "__main__":
