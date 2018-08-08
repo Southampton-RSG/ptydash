@@ -130,6 +130,8 @@ class Card(six.with_metaclass(Plugin, object)):
         :param text: Text associated with this element - usually a description or caption
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
+
+        # TODO check this isn't called when cards are written to template
         self.id = id
         self.text = text
         self.update_delay = update_delay
