@@ -13,7 +13,6 @@ This file contains two important sections:
 app
   Global settings that affect the behaviour of the PtyDash server.
   These are:
-    :autoreload: Automatically reload the server when the source code is edited
     :debug: Run the server in debug mode - provides extra information if errors are encountered
     :port: Port on which to run the server
 

@@ -19,6 +19,8 @@ visualisation plugins referred to as 'cards'.
 
    user-guide
    developer-guide
+   cards
+   apidoc/modules
 
 
 
