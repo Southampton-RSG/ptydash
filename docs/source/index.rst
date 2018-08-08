@@ -23,6 +23,39 @@ visualisation plugins referred to as 'cards'.
    apidoc/modules
 
 
+Installing PtyDash (under development)
+======================================
+
+PtyDash is listed in `PyPI <https://pypi.org/>`_ so is able to be installed using ``pip``.
+
+::
+
+  pip install ptydash
+
+
+**Requirements**:
+
+PtyPy is compatible with Python 2.7 and 3.
+It requires a small number of third party Python packages, which will be installed automatically by ``pip``:
+
+:matplotlib:
+  Graphing library required for some interface cards to plot graphs
+
+:numpy:
+  Numerical library required for some interface cards to process numerical data
+
+:six:
+  Compatibility library required to enable compatibility with both versions of Python
+
+:tornado:
+  Web framework required to drive the web user interface
+
+
+**Platforms**:
+
+PtyPy was developed on both Linux and Windows machines and is expected to be compatible with
+current versions of Linux, Mac OSX and Windows.
+
 
 Indices and tables
 ==================

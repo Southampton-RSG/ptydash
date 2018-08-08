@@ -21,6 +21,22 @@ layout
   Each card type has a set of properties which **must** or **may** be defined.
   You will find a list of the available card types :doc:`here <cards>`.
 
+A example valid PtyDash ``config.json`` is::
+
+  {
+    "app": {
+      "debug": false,
+      "port": 8888
+    },
+    "layout": [
+      {
+        "type": "TextCard",
+        "id": "text-0",
+        "text": "Hello World!"
+      }
+    ]
+  }
+
 
 Running PtyDash
 ---------------
