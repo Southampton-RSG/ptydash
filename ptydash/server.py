@@ -72,12 +72,16 @@ def make_app(config):
     return app
 
 
-if __name__ == "__main__":
+def main():
     with open('config.json') as f:
         config = json.load(f)
 
     app = make_app(config)
     app.listen(config['app']['port'])
 
-    print('Starting Tornado server on http://localhost:{0}'.format(config['app']['port']))
+    print('Starting PtyDash server at http://localhost:{0}'.format(config['app']['port']))
     tornado.ioloop.IOLoop.current().start()
+
+
+if __name__ == "__main__":
+    main()
