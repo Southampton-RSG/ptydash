@@ -11,6 +11,7 @@ import six
 
 
 def bytes_to_base64(byte_seq):
+    # type: (...) -> str
     """
     Convert a byte sequence (e.g. io.BytesIO) to a base64 string.
 
@@ -21,6 +22,7 @@ def bytes_to_base64(byte_seq):
 
 
 def fig_to_base64(fig):
+    # type: (...) -> str
     """
     Render a matplotlib figure into a base64 string.
 
@@ -65,6 +67,7 @@ class Layout(list):
     """
     @classmethod
     def from_config(cls, config):
+        # type: (dict) -> Layout
         """
         Read a Layout sequence of Cards from a config dictionary.
 
@@ -102,6 +105,7 @@ class Plugin(type):
     # TODO can plugin loading be made more elegant?
     @staticmethod
     def load_plugins(plugin_dir):
+        # type: (str) -> None
         """
         Execute the plugin definitions so they are defined and registered.
 
@@ -128,7 +132,8 @@ class Card(six.with_metaclass(Plugin, object)):
     """
     template = None
 
-    def __init__(self, text=None, update_delay=1000, **kwargs):
+    def __init__(self, text=None, update_delay=1000):
+        # type: (str, int) -> None
         """
         Init.
 
@@ -140,6 +145,7 @@ class Card(six.with_metaclass(Plugin, object)):
         self.update_delay = update_delay
 
     def get_message(self):
+        # type: () -> dict
         """
         Create the message that must be sent via WebSocket to update this Card.
 

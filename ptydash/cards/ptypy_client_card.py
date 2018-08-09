@@ -13,6 +13,7 @@ class PtyPyClientCard(ptydash.interface.Card):
 
     def __init__(self, text=None, update_delay=1000,
                  address=None, port=None):
+        # type: (str, int, str, int) -> None
         """
         Initialize PtyPy client and plotter.
 
@@ -42,6 +43,7 @@ class PtyPyClientCard(ptydash.interface.Card):
         self.initialized = False
 
     def get_message(self):
+        # type: () -> dict
         """
         Create the message that must be sent via WebSocket to update this Card.
 

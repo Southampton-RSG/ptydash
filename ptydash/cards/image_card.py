@@ -33,6 +33,7 @@ class ImageCard(ptydash.interface.Card):
     template = 'modules/imagecard.html'
 
     def get_message(self):
+        # type: () -> dict
         """
         Create the message that must be sent via WebSocket to update this Card.
 

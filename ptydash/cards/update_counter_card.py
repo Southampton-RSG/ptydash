@@ -13,7 +13,8 @@ class UpdateCounterCard(ptydash.interface.Card):
     """
     template = 'modules/updatecountercard.html'
 
-    def __init__(self, text=None, update_delay=1000, **kwargs):
+    def __init__(self, text=None, update_delay=1000):
+        # type: (str, int) -> None
         """
         Initialize counter.
 
@@ -25,6 +26,7 @@ class UpdateCounterCard(ptydash.interface.Card):
         self.counter = 0
 
     def get_message(self):
+        # type: () -> dict
         """
         Create the message that must be sent via WebSocket to update this Card.
 

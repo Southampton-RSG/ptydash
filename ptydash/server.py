@@ -57,6 +57,7 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
             card.callback.stop()
 
     def update_card(self, card):
+        # type: (ptydash.interface.Card) -> None
         """
         Callback function which sends an update message for a given Card.
 
@@ -68,6 +69,7 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
 
 
 def main():
+    # type: () -> None
     """
     Initialise and run the PtyDash server.
     """
