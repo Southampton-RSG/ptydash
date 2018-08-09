@@ -25,8 +25,8 @@ class PtyPyClientCard(ptydash.interface.Card):
             from ptypy.io.interaction import Client_DEFAULT
             from ptypy.utils import plot_client
             from ptypy.utils.parameters import Param
-        except ImportError as e:
-            raise ptydash.interface.CardInitializationError(e)
+        except ImportError as exc:
+            raise ptydash.interface.CardInitializationError(exc)
 
         super(PtyPyClientCard, self).__init__(text, update_delay)
 

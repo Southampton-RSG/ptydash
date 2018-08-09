@@ -97,8 +97,9 @@ class Layout(list):
             try:
                 card = Card.get_plugin(card_type)(**item)
                 obj.append(card)
-            except CardInitializationError as e:
-                logger.error('Initializing card type \'{0}\' failed: {1}'.format(card_type, e))
+            except CardInitializationError as exc:
+                logger.error('Initializing card type \'%(card_type)\' failed: %(message)',
+                             card_type=card_type, message=exc)
 
         return obj
 
@@ -146,7 +147,8 @@ class Plugin(type):
 
             # Importing a module causes its class definitions to be executed
             # When class definitions are executed they are registered by the Plugin metaclass
-            importlib.import_module(plugin_dir.replace('/', '.') + '.' + module_name, package='ptydash')
+            importlib.import_module(plugin_dir.replace('/', '.') + '.' + module_name,
+                                    package='ptydash')
 
 
 class Card(six.with_metaclass(Plugin, object)):
