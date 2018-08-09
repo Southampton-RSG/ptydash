@@ -20,10 +20,13 @@ class PtyPyClientCard(ptydash.interface.Card):
         :param text: Text associated with this element - usually a description or caption
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
-        from ptypy.core.ptycho import DEFAULT_autoplot
-        from ptypy.io.interaction import Client_DEFAULT
-        from ptypy.utils import plot_client
-        from ptypy.utils.parameters import Param
+        try:
+            from ptypy.core.ptycho import DEFAULT_autoplot
+            from ptypy.io.interaction import Client_DEFAULT
+            from ptypy.utils import plot_client
+            from ptypy.utils.parameters import Param
+        except ImportError as e:
+            raise ptydash.interface.CardInitializationError(e)
 
         super(PtyPyClientCard, self).__init__(text, update_delay)
 

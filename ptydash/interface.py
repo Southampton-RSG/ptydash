@@ -5,9 +5,15 @@ This module contains classes representing objects displayed on the dashboard.
 import base64
 import copy
 import io
+import logging
 import uuid
 
 import six
+
+import ptydash
+
+
+logger = logging.getLogger(__name__)
 
 
 def bytes_to_base64(byte_seq):
@@ -61,6 +67,12 @@ class DoesNotUpdate(Exception):
     """
 
 
+class CardInitializationError(Exception):
+    """
+    Exception which should be raised if a Card fails to initialize.
+    """
+
+
 class Layout(list):
     """
     Class holding a list of Cards to be displayed by the UI.
@@ -82,8 +94,11 @@ class Layout(list):
             item = copy.deepcopy(item)
             card_type = item.pop('type')
 
-            card = Card.get_plugin(card_type)(**item)
-            obj.append(card)
+            try:
+                card = Card.get_plugin(card_type)(**item)
+                obj.append(card)
+            except CardInitializationError as e:
+                logger.error('Initializing card type \'{0}\' failed: {1}'.format(card_type, e))
 
         return obj
 
@@ -124,14 +139,14 @@ class Plugin(type):
         import importlib
         import os
 
-        for plugin_filename in os.listdir(plugin_dir):
+        for plugin_filename in os.listdir(os.path.join(ptydash.PROJECT_ROOT, plugin_dir)):
             module_name = plugin_filename.split('.')[0]
             if module_name == '__init__':
                 continue
 
             # Importing a module causes its class definitions to be executed
             # When class definitions are executed they are registered by the Plugin metaclass
-            importlib.import_module('.'.join(plugin_dir.split('/')) + '.' + module_name)
+            importlib.import_module(plugin_dir.replace('/', '.') + '.' + module_name, package='ptydash')
 
 
 class Card(six.with_metaclass(Plugin, object)):
