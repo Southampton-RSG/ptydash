@@ -82,7 +82,7 @@ class Layout(list):
             item = copy.deepcopy(item)
             card_type = item.pop('type')
 
-            card = Card.plugins[card_type](**item)
+            card = Card.get_plugin(card_type)(**item)
             obj.append(card)
 
         return obj
@@ -96,11 +96,21 @@ class Plugin(type):
         """
         Register all concrete subclasses when they are defined.
         """
-        if not hasattr(cls, 'plugins'):
-            cls.plugins = {}
+        if not hasattr(cls, '_plugins'):
+            cls._plugins = {}
 
         else:
-            cls.plugins[name] = cls
+            cls._plugins[name] = cls
+
+    def get_plugin(cls, class_name):
+        # type: (str) -> type
+        """
+        Find a particular plugin by class name.
+
+        :param class_name: Name of plugin class
+        :return: Plugin class
+        """
+        return cls._plugins[class_name]
 
     # TODO can plugin loading be made more elegant?
     @staticmethod

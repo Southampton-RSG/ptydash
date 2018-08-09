@@ -52,6 +52,13 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
             except ptydash.interface.DoesNotUpdate:
                 pass
 
+    def on_message(self, message):
+        """
+        Ignore incoming messages.
+
+        :param message: Incoming message
+        """
+
     def on_close(self):
         for card in self.application.layout:
             card.callback.stop()
