@@ -35,7 +35,7 @@ PtyDash is listed in `PyPI <https://pypi.org/>`_ so is able to be installed usin
 
 **Requirements**:
 
-PtyPy is compatible with Python 2.7 and 3.
+PtyDash is compatible with Python 2.7 and 3.
 It requires a small number of third party Python packages, which will be installed automatically by ``pip``:
 
 :matplotlib:
@@ -53,7 +53,7 @@ It requires a small number of third party Python packages, which will be install
 
 **Platforms**:
 
-PtyPy was developed on both Linux and Windows machines and is expected to be compatible with
+PtyDash was developed on both Linux and Windows machines and is expected to be compatible with
 current versions of Linux, Mac OSX and Windows.
 
 
