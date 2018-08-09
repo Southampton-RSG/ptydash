@@ -5,6 +5,7 @@ This module contains classes representing objects displayed on the dashboard.
 import base64
 import copy
 import io
+import uuid
 
 import six
 
@@ -77,9 +78,8 @@ class Layout(list):
         for item in config['layout']:
             item = copy.deepcopy(item)
             card_type = item.pop('type')
-            card_id = item.pop('id')
 
-            card = Card.plugins[card_type](card_id, **item)
+            card = Card.plugins[card_type](**item)
             obj.append(card)
 
         return obj
@@ -128,15 +128,14 @@ class Card(six.with_metaclass(Plugin, object)):
     """
     template = None
 
-    def __init__(self, id, text=None, update_delay=1000, **kwargs):
+    def __init__(self, text=None, update_delay=1000, **kwargs):
         """
         Init.
 
-        :param id: A unique id for the element to be used to receive information via a WebSocket
         :param text: Text associated with this element - usually a description or caption
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
-        self.id = id
+        self.id = str(uuid.uuid4())
         self.text = text
         self.update_delay = update_delay
 

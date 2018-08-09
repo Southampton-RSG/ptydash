@@ -11,12 +11,11 @@ class PtyPyClientCard(ptydash.interface.Card):
     """
     template = 'modules/ptypyclientcard.html'
 
-    def __init__(self, id, text=None, update_delay=1000,
+    def __init__(self, text=None, update_delay=1000,
                  address=None, port=None):
         """
         Initialize PtyPy client and plotter.
 
-        :param id: A unique id for the element to be used to receive information via a WebSocket
         :param text: Text associated with this element - usually a description or caption
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
@@ -25,7 +24,7 @@ class PtyPyClientCard(ptydash.interface.Card):
         from ptypy.utils import plot_client
         from ptypy.utils.parameters import Param
 
-        super(PtyPyClientCard, self).__init__(id, text, update_delay)
+        super(PtyPyClientCard, self).__init__(text, update_delay)
 
         self.plot_config = DEFAULT_autoplot.copy(depth=3)
 

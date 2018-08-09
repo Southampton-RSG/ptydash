@@ -76,8 +76,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('Reading config from \'{0}\''.format(args.config))
     with open(args.config) as config_file:
-        print('Reading config from \'{0}\''.format(args.config))
         config = json.load(config_file)
 
     app = tornado.web.Application(

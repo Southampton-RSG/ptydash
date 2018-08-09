@@ -13,15 +13,14 @@ class UpdateCounterCard(ptydash.interface.Card):
     """
     template = 'modules/updatecountercard.html'
 
-    def __init__(self, id, text=None, update_delay=1000, **kwargs):
+    def __init__(self, text=None, update_delay=1000, **kwargs):
         """
         Initialize counter.
 
-        :param id: A unique id for the element to be used to receive information via a WebSocket
         :param text: Text associated with this element - usually a description or caption
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
-        super(UpdateCounterCard, self).__init__(id, text, update_delay)
+        super(UpdateCounterCard, self).__init__(text, update_delay)
 
         self.counter = 0
 
