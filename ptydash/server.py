@@ -1,6 +1,14 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+"""
+This module defines the PtyDash server and is the intended entry point of the application.
+
+PtyDash may be run from source by `python ptydash/server.py`.
+"""
+
 from __future__ import absolute_import, division, print_function
 
+import argparse
 import functools
 import json
 
@@ -15,7 +23,7 @@ class DashboardHandler(tornado.web.RequestHandler):
     """
     Handler for main dashboard view.
     """
-    def get(self):
+    def get(self, *args, **kwargs):
         self.render('dashboard.html', layout=self.application.layout)
 
 
@@ -44,23 +52,48 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
             except ptydash.interface.DoesNotUpdate:
                 pass
 
+    def on_message(self, message):
+        """
+        Ignore incoming messages.
+
+        :param message: Incoming message
+        """
+
     def on_close(self):
         for card in self.application.layout:
             card.callback.stop()
 
     def update_card(self, card):
+        # type: (ptydash.interface.Card) -> None
+        """
+        Callback function which sends an update message for a given Card.
+
+        :param card: Card for which to send update message
+        """
         message = card.get_message()
         if message is not None:
             self.write_message(message)
 
 
-def make_app(config):
+def main():
+    # type: () -> None
+    """
+    Initialise and run the PtyDash server.
+    """
+    parser = argparse.ArgumentParser(description='Data dashboard and PtyPy monitor')
+    parser.add_argument('config', nargs='?', default='config.json')
+
+    args = parser.parse_args()
+
+    print('Reading config from \'{0}\''.format(args.config))
+    with open(args.config) as config_file:
+        config = json.load(config_file)
+
     app = tornado.web.Application(
         [
             (r'/', DashboardHandler),
             (r'/data', DataWebSocket),
         ],
-        autoreload=config['app']['autoreload'],
         debug=config['app']['debug'],
         template_path='templates',
         static_path='static',
@@ -69,15 +102,13 @@ def make_app(config):
     # Read UI layout from config
     app.layout = ptydash.interface.Layout.from_config(config)
 
-    return app
+    print('Starting PtyDash server on http://localhost:{0}'.format(config['app']['port']))
+    try:
+        app.listen(config['app']['port'])
+        tornado.ioloop.IOLoop.current().start()
+    except KeyboardInterrupt:
+        print('Shutting down...')
 
 
 if __name__ == "__main__":
-    with open('config.json') as f:
-        config = json.load(f)
-
-    app = make_app(config)
-    app.listen(config['app']['port'])
-
-    print('Starting Tornado server on http://localhost:{0}'.format(config['app']['port']))
-    tornado.ioloop.IOLoop.current().start()
+    main()
