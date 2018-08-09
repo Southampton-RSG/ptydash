@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+"""
+This module defines the PtyDash server and is the intended entry point of the application.
+
+PtyDash may be run from source by `python ptydash/server.py`.
+"""
+
 from __future__ import absolute_import, division, print_function
 
 import argparse
@@ -16,7 +23,7 @@ class DashboardHandler(tornado.web.RequestHandler):
     """
     Handler for main dashboard view.
     """
-    def get(self):
+    def get(self, *args, **kwargs):
         self.render('dashboard.html', layout=self.application.layout)
 
 
@@ -50,20 +57,28 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
             card.callback.stop()
 
     def update_card(self, card):
+        """
+        Callback function which sends an update message for a given Card.
+
+        :param card: Card for which to send update message
+        """
         message = card.get_message()
         if message is not None:
             self.write_message(message)
 
 
 def main():
+    """
+    Initialise and run the PtyDash server.
+    """
     parser = argparse.ArgumentParser(description='Data dashboard and PtyPy monitor')
     parser.add_argument('config', nargs='?', default='config.json')
 
     args = parser.parse_args()
 
-    with open(args.config) as f:
+    with open(args.config) as config_file:
         print('Reading config from \'{0}\''.format(args.config))
-        config = json.load(f)
+        config = json.load(config_file)
 
     app = tornado.web.Application(
         [

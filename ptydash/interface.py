@@ -9,14 +9,14 @@ import io
 import six
 
 
-def bytes_to_base64(bytes):
+def bytes_to_base64(byte_seq):
     """
     Convert a byte sequence (e.g. io.BytesIO) to a base64 string.
 
     :param bytes: Byte sequence to convert
     :return: Base64 string
     """
-    return base64.b64encode(bytes).decode('utf-8')
+    return base64.b64encode(byte_seq).decode('utf-8')
 
 
 def fig_to_base64(fig):
@@ -26,16 +26,20 @@ def fig_to_base64(fig):
     :param fig: Figure to render
     :return: Base64 string
     """
-    buffer = io.BytesIO()
-    fig.savefig(buffer, format='png')
-    buffer.seek(0)
+    byte_buffer = io.BytesIO()
+    fig.savefig(byte_buffer, format='png')
+    byte_buffer.seek(0)
 
-    return bytes_to_base64(buffer.read())
+    return bytes_to_base64(byte_buffer.read())
 
 
 class MatplotlibBackend(object):
+    """
+    Context Manager to temporarily switch Matplotlib backend.
+    """
     def __init__(self, backend):
         self.backend = backend
+        self.old_backend = None
 
     def __enter__(self):
         import matplotlib.pyplot
@@ -49,7 +53,9 @@ class MatplotlibBackend(object):
 
 
 class DoesNotUpdate(Exception):
-    pass
+    """
+    Exception raised if a Card does not support updating via WebSocket.
+    """
 
 
 class Layout(list):
@@ -70,10 +76,10 @@ class Layout(list):
 
         for item in config['layout']:
             item = copy.deepcopy(item)
-            type = item.pop('type')
-            id = item.pop('id')
+            card_type = item.pop('type')
+            card_id = item.pop('id')
 
-            card = Card.plugins[type](id, **item)
+            card = Card.plugins[card_type](card_id, **item)
             obj.append(card)
 
         return obj
@@ -104,8 +110,8 @@ class Plugin(type):
         import importlib
         import os
 
-        for f in os.listdir(plugin_dir):
-            module_name = f.split('.')[0]
+        for plugin_filename in os.listdir(plugin_dir):
+            module_name = plugin_filename.split('.')[0]
             if module_name == '__init__':
                 continue
 

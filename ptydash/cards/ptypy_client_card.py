@@ -1,3 +1,7 @@
+"""
+A Card representing a PtyPy client which auto-refreshes.
+"""
+
 import ptydash.interface
 
 
@@ -31,8 +35,8 @@ class PtyPyClientCard(ptydash.interface.Card):
         if port is not None:
             self.client_config.port = port
 
-        self.pc = plot_client.PlotClient(self.client_config)
-        self.pc.start()
+        self.plot_client = plot_client.PlotClient(self.client_config)
+        self.plot_client.start()
 
         self.plotter = plot_client.MPLplotter()
 
@@ -44,22 +48,22 @@ class PtyPyClientCard(ptydash.interface.Card):
 
         :return: WebSocket message dictionary
         """
-        status = self.pc.status
+        status = self.plot_client.status
         graph_encoded = None
 
-        if status == self.pc.STOPPED:
+        if status == self.plot_client.STOPPED:
             # Restart client so we can connect to a new server - not just one-shot
-            self.pc.start()
-            self.pc._has_stopped = False
+            self.plot_client.start()
+            self.plot_client._has_stopped = False
             self.initialized = False
 
-        elif status == self.pc.DATA:
-            self.plotter.pr, self.plotter.ob, runtime = self.pc.get_data()
+        elif status == self.plot_client.DATA:
+            self.plotter.pr, self.plotter.ob, runtime = self.plot_client.get_data()
             self.plotter.runtime.update(runtime)
 
             if not self.initialized:
-                if self.pc.config:
-                    self.plot_config.update(self.pc.config)
+                if self.plot_client.config:
+                    self.plot_config.update(self.plot_client.config)
 
                 self.plotter.update_plot_layout(self.plot_config.layout)
                 self.initialized = True
@@ -72,7 +76,7 @@ class PtyPyClientCard(ptydash.interface.Card):
             'topic': 'update',
             'id': self.id,
             'data': {
-                'connected': self.pc.client.connected,
+                'connected': self.plot_client.client.connected,
                 'status': status,
                 'image': graph_encoded,
             }

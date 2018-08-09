@@ -1,3 +1,7 @@
+"""
+A basic Card representing a simple block of text.
+"""
+
 import ptydash.interface
 
 

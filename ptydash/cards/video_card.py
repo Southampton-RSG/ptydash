@@ -1,3 +1,7 @@
+"""
+A Card representing a video feed.
+"""
+
 import ptydash.interface
 
 

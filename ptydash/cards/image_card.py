@@ -1,3 +1,7 @@
+"""
+A Card representing a graph which auto-refreshes.
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -5,14 +9,19 @@ import ptydash.interface
 
 
 def get_graph():
+    """
+    Produce a histogram of random normally distributed numbers.
+
+    :return: Matplotlib Figure
+    """
     nums = np.random.normal(0, 1, 1000)
 
     # TODO Is it possible to avoid having to plt.close()?
     with ptydash.interface.MatplotlibBackend('agg'):
         fig = plt.figure()
         fig.suptitle('Ptydash Plot')
-        ax = fig.subplots()
-        ax.hist(nums)
+        axes = fig.subplots()
+        axes.hist(nums)
 
     return fig
 

@@ -1,3 +1,7 @@
+"""
+Card that displays the number of updates that have been requested.
+"""
+
 import ptydash.interface
 
 
