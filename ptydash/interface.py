@@ -98,8 +98,8 @@ class Layout(list):
                 card = Card.get_plugin(card_type)(**item)
                 obj.append(card)
             except CardInitializationError as exc:
-                logger.error('Initializing card type \'%(card_type)\' failed: %(message)',
-                             card_type=card_type, message=exc)
+                logger.error('Initializing card type \'%(card_type)s\' failed: %(message)s',
+                             {'card_type': card_type, 'message': exc})
 
         return obj
 

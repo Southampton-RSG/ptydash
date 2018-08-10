@@ -93,8 +93,8 @@ def main():
 
     args = parser.parse_args()
 
-    logger.info('Reading config from \'%(file)\'',
-                file=args.config)
+    logger.info('Reading config from \'%(file)s\'',
+                {'file': args.config})
     with open(args.config) as config_file:
         config = json.load(config_file)
 
@@ -111,8 +111,8 @@ def main():
     # Read UI layout from config
     app.layout = ptydash.interface.Layout.from_config(config)
 
-    logger.info('Starting PtyDash server on http://localhost:%(port)',
-                port=config['app']['port'])
+    logger.info('Starting PtyDash server on http://localhost:%(port)d',
+                {'port': config['app']['port']})
     try:
         app.listen(config['app']['port'])
         tornado.ioloop.IOLoop.current().start()
