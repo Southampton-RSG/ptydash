@@ -37,8 +37,14 @@ def send_mqtt():
         tempAndHumid = "Temperature: " + str(temperatureReading) + " Humidity: " + str(humidityReading)
         print("sending data "+"Temperature: " + str(temperatureReading) + " Humidity: " + str(humidityReading))
 
+        windspeed = random.randint(0,100)
+        rainfall = random.randint(0,50)
+        wind_and_rain = "Windspeed: " + str(windspeed) + " Rainfall: " + str(rainfall)
+        print("sending data "+"Windspeed: " + str(windspeed) + " Rainfall: " + str(rainfall))
+
         #example publish setting
         client.publish("datadump/tempAndHumid",tempAndHumid)
+        client.publish("datadump/windandrain",wind_and_rain)
 
         time.sleep(5)
     return
@@ -49,6 +55,7 @@ def write_data():
         client.loop_start()
         #example subscribe setting
         client.subscribe("datadump/tempAndHumid")
+        client.subscribe("datadump/windandrain")
         client.loop_stop()
 
     return

@@ -19,7 +19,7 @@
       "text": "Test image 1",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
-      "topic_id": "datadump/tempAndHumid"
+      "topic_id": "datadump/windandrain"
     },
     {
       "type": "TextCard",
