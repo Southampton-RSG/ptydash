@@ -85,5 +85,4 @@ if __name__ == "__main__":
 
     print('Starting Tornado server on http://localhost:{0}'.format(config['app']['port']))
     tornado.ioloop.IOLoop.current().start()
-    mqtt()
 

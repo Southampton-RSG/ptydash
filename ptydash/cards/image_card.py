@@ -10,6 +10,9 @@ import ptydash.interface
 
 
 class ImageCard(ptydash.interface.Card):
+    """
+    create graphical images
+    """
 
     def __init__(self, id, text=None, update_delay=1000, hostname=None, topic_id=None, **kwargs):
         super(ImageCard, self).__init__(id, text, update_delay)
@@ -29,7 +32,7 @@ class ImageCard(ptydash.interface.Card):
     def client_create(self, clientname):
         """
         creates separate mqtt subscription instances for each client
-        :param clientname:
+        :param clientname: client identifier
         :return:
         """
         for xyz in self.client_list:
@@ -54,7 +57,7 @@ class ImageCard(ptydash.interface.Card):
     def on_message(self, client, userdata, message):
         """
         mqtt callback process to retrieve broker data
-        :param client: unusued client data
+        :param client: unused client data
         :param userdata: unused user data
         :param message: message stream containing data
         :return: message payload string
@@ -74,7 +77,7 @@ class ImageCard(ptydash.interface.Card):
         :return: graphic image of mqtt data
         """
         if self.data is None:
-            return
+            return None
 
         # split mqtt message stream into manageable chunks
         # header:, value, header:, value

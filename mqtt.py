@@ -1,8 +1,11 @@
+"""
+this script writes proxy data to an mqtt broker
+"""
+
 import threading
 import time
 import random
 import paho.mqtt.client as mqtt
-#import ptydash.cards.image_card as graph
 
 # mqtt broker
 host = "wonderbox.ecs.soton.ac.uk"
@@ -31,7 +34,8 @@ def send_mqtt():
         lf.write("Posting data to "+host+" at "+str(time.time()) + "\n")
         lf.close()
 
-        #make up some data, this should be sensors or whatever
+        # make up some data, this should be sensors or whatever
+        # syntax is super important for str.split() not going tits up.
         temperatureReading = random.randint(0,100)
         humidityReading = random.randint(0,100)
         tempAndHumid = "Temperature: " + str(temperatureReading) + " Humidity: " + str(humidityReading)
