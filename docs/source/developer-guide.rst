@@ -30,7 +30,7 @@ When the PtyDash server is started and a client web browser is connected, the re
 following process:
 
 #. When the server is started, the list of required cards is read from a configuration file - by default ``config.json``
-#. The set of available Card subclasses is collected from the contents of :mod:`ptydash.cards`.
+#. The set of available Card subclass plugins is collected from the contents of :mod:`ptydash.cards`.
    This allows further card types to be added, simply by dropping the file in the correct directory
 #. For each required card, an instance of the correct type is initialised.
    Some card types may attempt to initiate connections to other processes at this point.
@@ -52,6 +52,12 @@ The Behaviour Definition
 
 The card behaviour is defined by creating a subclass of :class:`ptydash.interface.card` inside the :mod:`ptydash.cards`
 package.
+
+There are two methods from a card plugin which are called by PtyDash: ``__init__`` and ``get_message``.
+The first of these is called once for each instance of the card, shortly after the server is started.
+The second is called periodically to update fields in the displayed representation of the card in the web browser.
+
+For further information see :class:`ptydash.interface.Card`.
 
 
 The Display Definition

@@ -140,6 +140,8 @@ class Card(six.with_metaclass(Plugin, object)):
 
     When creating a Card plugin, inherit from this class.
     """
+    #: Name of the HTML template which renders this :class:`Card`, relative to the PtyDash template directory.
+    #: Subclasses of :class:`Card` **must** define this attribute.
     template = None
 
     def __init__(self, text=None, update_delay=1000):
@@ -157,7 +159,25 @@ class Card(six.with_metaclass(Plugin, object)):
     def get_message(self):
         # type: () -> dict
         """
-        Create the message that must be sent via WebSocket to update this Card.
+        Create the message dictionary that must be sent via WebSocket to update this Card.
+        This method is only required to be implemented by subclasses of :class:`Card` if
+        they are to be dynamically updated.
+
+        The message dictionary should be of the format:
+
+        .. code-block:: python
+
+           {
+             'topic': 'update',
+             'id': self.id,
+             'data': {
+               ...
+             }
+           }
+
+        Where the dictionary ``data`` contains any data you wish to send to the interface.
+        You must ensure that there is complementary JavaScript in the HTML template (:attr:`template`) of the :class:`Card`
+        which will receive the ``data`` dictionary and update the HTML representation.
 
         :return: WebSocket message dictionary
         """

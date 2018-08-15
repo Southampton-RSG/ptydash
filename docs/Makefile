@@ -15,7 +15,7 @@ help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 apidoc:
-	@$(SPHINXAPIDOC) -f -e -o "$(SOURCEDIR)/apidoc" "$(LIBDIR)"
+	@$(SPHINXAPIDOC) -f -e -M -o "$(SOURCEDIR)/apidoc" "$(LIBDIR)"
 
 .PHONY: help apidoc Makefile
 
