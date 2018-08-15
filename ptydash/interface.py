@@ -5,37 +5,50 @@ This module contains classes representing objects displayed on the dashboard.
 import base64
 import copy
 import io
+import logging
+import uuid
 
 import six
 
+import ptydash
 
-def bytes_to_base64(bytes):
+
+logger = logging.getLogger(__name__)
+
+
+def bytes_to_base64(byte_seq):
+    # type: (...) -> str
     """
     Convert a byte sequence (e.g. io.BytesIO) to a base64 string.
 
     :param bytes: Byte sequence to convert
     :return: Base64 string
     """
-    return base64.b64encode(bytes).decode('utf-8')
+    return base64.b64encode(byte_seq).decode('utf-8')
 
 
 def fig_to_base64(fig):
+    # type: (...) -> str
     """
     Render a matplotlib figure into a base64 string.
 
     :param fig: Figure to render
     :return: Base64 string
     """
-    buffer = io.BytesIO()
-    fig.savefig(buffer, format='png')
-    buffer.seek(0)
+    byte_buffer = io.BytesIO()
+    fig.savefig(byte_buffer, format='png')
+    byte_buffer.seek(0)
 
-    return bytes_to_base64(buffer.read())
+    return bytes_to_base64(byte_buffer.read())
 
 
 class MatplotlibBackend(object):
+    """
+    Context Manager to temporarily switch Matplotlib backend.
+    """
     def __init__(self, backend):
         self.backend = backend
+        self.old_backend = None
 
     def __enter__(self):
         import matplotlib.pyplot
@@ -49,7 +62,15 @@ class MatplotlibBackend(object):
 
 
 class DoesNotUpdate(Exception):
-    pass
+    """
+    Exception raised if a Card does not support updating via WebSocket.
+    """
+
+
+class CardInitializationError(Exception):
+    """
+    Exception which should be raised if a Card fails to initialize.
+    """
 
 
 class Layout(list):
@@ -58,6 +79,7 @@ class Layout(list):
     """
     @classmethod
     def from_config(cls, config):
+        # type: (dict) -> Layout
         """
         Read a Layout sequence of Cards from a config dictionary.
 
@@ -70,11 +92,14 @@ class Layout(list):
 
         for item in config['layout']:
             item = copy.deepcopy(item)
-            type = item.pop('type')
-            id = item.pop('id')
+            card_type = item.pop('type')
 
-            card = Card.plugins[type](id, **item)
-            obj.append(card)
+            try:
+                card = Card.get_plugin(card_type)(**item)
+                obj.append(card)
+            except CardInitializationError as exc:
+                logger.error('Initializing card type \'%(card_type)s\' failed: %(message)s',
+                             {'card_type': card_type, 'message': exc})
 
         return obj
 
@@ -87,15 +112,26 @@ class Plugin(type):
         """
         Register all concrete subclasses when they are defined.
         """
-        if not hasattr(cls, 'plugins'):
-            cls.plugins = {}
+        if not hasattr(cls, '_plugins'):
+            cls._plugins = {}
 
         else:
-            cls.plugins[name] = cls
+            cls._plugins[name] = cls
+
+    def get_plugin(cls, class_name):
+        # type: (str) -> type
+        """
+        Find a particular plugin by class name.
+
+        :param class_name: Name of plugin class
+        :return: Plugin class
+        """
+        return cls._plugins[class_name]
 
     # TODO can plugin loading be made more elegant?
     @staticmethod
     def load_plugins(plugin_dir):
+        # type: (str) -> None
         """
         Execute the plugin definitions so they are defined and registered.
 
@@ -104,14 +140,15 @@ class Plugin(type):
         import importlib
         import os
 
-        for f in os.listdir(plugin_dir):
-            module_name = f.split('.')[0]
+        for plugin_filename in os.listdir(os.path.join(ptydash.PROJECT_ROOT, plugin_dir)):
+            module_name = plugin_filename.split('.')[0]
             if module_name == '__init__':
                 continue
 
             # Importing a module causes its class definitions to be executed
             # When class definitions are executed they are registered by the Plugin metaclass
-            importlib.import_module('.'.join(plugin_dir.split('/')) + '.' + module_name)
+            importlib.import_module(plugin_dir.replace('/', '.') + '.' + module_name,
+                                    package='ptydash')
 
 
 class Card(six.with_metaclass(Plugin, object)):
@@ -122,19 +159,20 @@ class Card(six.with_metaclass(Plugin, object)):
     """
     template = None
 
-    def __init__(self, id, text=None, update_delay=1000, **kwargs):
+    def __init__(self, text=None, update_delay=1000):
+        # type: (str, int) -> None
         """
         Init.
 
-        :param id: A unique id for the element to be used to receive information via a WebSocket
         :param text: Text associated with this element - usually a description or caption
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
-        self.id = id
+        self.id = str(uuid.uuid4())
         self.text = text
         self.update_delay = update_delay
 
     def get_message(self):
+        # type: () -> dict
         """
         Create the message that must be sent via WebSocket to update this Card.
 

@@ -11,7 +11,7 @@ import ptydash.interface
 
 class ImageCard(ptydash.interface.Card):
     """
-    create graphical images
+    A Card representing a graph which auto-refreshes.
     """
 
     def __init__(self, id, text=None, update_delay=1000, hostname=None, topic_id=None, **kwargs):
@@ -107,6 +107,7 @@ class ImageCard(ptydash.interface.Card):
     template = 'modules/imagecard.html'
 
     def get_message(self):
+        # type: () -> dict
         """
         Create the message that must be sent via WebSocket to update this Card.
 
