@@ -23,6 +23,7 @@ class ImageCard(ptydash.interface.Card):
         # mqtt data stream connection info
         self.host = hostname
         self.topic_name = topic_id
+        self.data_list = []
 
         identity = random.randint(0, 100)
         self.client_name = "PTYDASHCLIENT" + str(identity)
@@ -71,28 +72,28 @@ class ImageCard(ptydash.interface.Card):
         return
 
     # graph generation
-    def get_graph(self):
+    def get_graph(self, data):
         """
         process mqtt data stream output into graphical points
         :return: graphic image of mqtt data
         """
-        if self.data is None:
+        if data is None:
             return None
 
         # split mqtt message stream into manageable chunks
         # header:, value, header:, value
-        # we want value 1 and value 2, discard the headers for now.
-        data_list = str.split(self.data)
+        # we want value 1 and value 2, we'll use the headers in a mo.
+        self.data_list = str.split(data)
 
         # add the data values to a list to populate the graph
-        self.x_data_storage.append(data_list[1])
-        self.y_data_storage.append(data_list[3])
+        self.x_data_storage.append(int(self.data_list[1]))
+        self.y_data_storage.append(int(self.data_list[3]))
 
         # create the graph
         # set graph info before plotting/scattering
         plt.axis([0, 100, 0, 100])  # fix axis scale 0-100
-        plt.xlabel(data_list[0])  # set xlabel to header 1
-        plt.ylabel(data_list[2])  # set ylabel to header 2
+        plt.xlabel(self.data_list[0])  # set xlabel to header 1
+        plt.ylabel(self.data_list[2])  # set ylabel to header 2
         plt.scatter([self.x_data_storage], [self.y_data_storage], marker='s')
 
         buffer = io.BytesIO()
@@ -112,7 +113,7 @@ class ImageCard(ptydash.interface.Card):
 
         :return: WebSocket message dictionary
         """
-        graph_encoded = self.get_graph()
+        graph_encoded = self.get_graph(self.data)
 
         return {
             'topic': 'update',
