@@ -98,11 +98,20 @@ def main():
     with open(args.config) as config_file:
         config = json.load(config_file)
 
-    app = tornado.web.Application(
-        [
-            (r'/', DashboardHandler),
+    handlers = [
             (r'/data', DataWebSocket),
-        ],
+            (r'/', DashboardHandler),
+    ]
+
+    # Serve documentation if it has been compiled
+    docs_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'docs', 'build', 'html')
+    if os.path.exists(docs_path):
+        handlers.append(
+            (r'/docs/(.*)', tornado.web.StaticFileHandler, {'path': docs_path})
+        )
+
+    app = tornado.web.Application(
+        handlers,
         debug=config['app']['debug'],
         template_path=os.path.join(ptydash.PROJECT_ROOT, 'ptydash', 'templates'),
         static_path=os.path.join(ptydash.PROJECT_ROOT, 'ptydash', 'static'),
