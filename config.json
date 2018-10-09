@@ -44,6 +44,13 @@
       "text": "PtyPy client 2",
       "address": "tcp://127.0.0.1",
       "port": 5660
+    },
+    {
+      "type": "MqttCard",
+      "text": "Wind and Rain",
+      "update_delay": 5000,
+      "hostname": "wonderbox.ecs.soton.ac.uk",
+      "topic_id": "datadump/control"
     }
   ]
 }

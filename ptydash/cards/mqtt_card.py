@@ -2,10 +2,12 @@
 this module allows a user to send an mqtt data string to a specified server and topic_id
 """
 
-import ptydash.interface
 import paho.mqtt.client as mqtt
 
-class MqttCard(ptydash.interface.card):
+import ptydash.interface
+
+
+class MqttCard(ptydash.interface.Card):
     """
     send mqtt data string to specified:
     clientname,
@@ -13,17 +15,17 @@ class MqttCard(ptydash.interface.card):
     topic_id,
     data-string (actual data to send)
     """
+    template = 'modules/mqttcard.html'
 
-    def __init__(self, clientname=None, hostname=None, topic_id=None, data_string=None):
+    def __init__(self, text=None, update_delay=1000, hostname=None, topic_id=None):
+        super(MqttCard, self).__init__(text, update_delay)
+
         # client ID
-        self.client = clientname
+        self.client = 'PTYDASHCLIENT'
         # mqtt broker
         self.host = hostname
         # topic id
         self.topic = topic_id
-        # data to send
-        self.data = data_string
-        self.send_mqtt()
 
     def send_mqtt(self):
         client = mqtt.Client(self.client)
