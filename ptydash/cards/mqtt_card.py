@@ -20,22 +20,16 @@ class MqttCard(ptydash.interface.Card):
     def __init__(self, text=None, update_delay=1000, hostname=None, topic_id=None):
         super(MqttCard, self).__init__(text, update_delay)
 
-        # client ID
-        self.client = 'PTYDASHCLIENT'
-        # mqtt broker
+        self.client = 'PTYDASHCLIENT-' + self.id
         self.host = hostname
-        # topic id
         self.topic = topic_id
 
-    def send_mqtt(self):
-        client = mqtt.Client(self.client)
-        client.connect(self.host, port=1883, keepalive=60, bind_address="")
-        while True:
-            print("Sending data " + self.data + "to host " + self.host + "topic-id " + self.topic + "as " + self.client)
-            client.publish(self.topic, self.data)
-            client.loop_start()
-            client.subscribe(self.topic)
-            client.loop_stop()
-        return
+        self.client = mqtt.Client(self.client)
+        self.client.connect(self.host, port=1883, keepalive=60, bind_address="")
 
+        self.latest_command = None
 
+    def process_form(self, form_dict):
+        if 'command' in form_dict:
+            self.latest_command = form_dict['command'][0]
+            self.client.publish(self.topic, form_dict['command'][0])

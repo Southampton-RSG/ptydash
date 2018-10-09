@@ -47,7 +47,7 @@
     },
     {
       "type": "MqttCard",
-      "text": "Wind and Rain",
+      "text": "Commands",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
       "topic_id": "datadump/control"

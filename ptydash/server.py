@@ -92,7 +92,7 @@ class CardUpdateHandler(tornado.web.RequestHandler):
         card_id = self.get_body_argument('id')
         card = self.application.layout.get_card_by_id(card_id)
 
-        card.handle_message(self.request.body_arguments)
+        card.process_form(self.request.body_arguments)
 
 
 def main():

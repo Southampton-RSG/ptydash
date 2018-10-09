@@ -105,17 +105,12 @@ class Layout(list):
 
     def get_card_by_id(self, card_id):
         # type: (str) -> Card
-        matches = filter(lambda x: x.id == card_id, self)
-
-        if len(matches) == 1:
-            return matches[0]
-
-        elif len(matches) < 0:
-            raise ValueError('Card with id ' + card_id + ' does not exist')
+        for card in self:
+            if card.id == card_id:
+                return card
 
         else:
-            # This should never happen - uuids SHOULD never collide
-            raise ValueError('There are multiple cards with id ' + card_id)
+            raise ValueError('Card with id ' + card_id + ' does not exist')
 
 
 class Plugin(type):

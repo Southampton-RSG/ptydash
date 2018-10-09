@@ -2,8 +2,45 @@
     {% if object.text %}
     <div class="card-body">
         <div class="card-text">
-            {{ object.text }}
+            <span class="property-text">{{ object.text }}</span>
         </div>
     </div>
     {% end %}
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <td>Host</td>
+            <td>{{ object.host }}</td>
+        </tr>
+        <tr>
+            <td>Topic</td>
+            <td>{{ object.topic }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form id="form-{{ object.id }}">
+        <input type="hidden" class="form-control" name="id" value="{{ object.id }}">
+
+        <div class="form-group">
+            <label for="commandField">Command</label>
+            <input type="text" class="form-control" id="commandField" name="command" placeholder="Text">
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+
+    <script type="application/javascript">
+        $(function() {
+            $("#form-{{ object.id }}").on("submit", function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "/post",
+                    type: "POST",
+                    data: $(this).serialize()
+                });
+            });
+        });
+    </script>
 </div>
