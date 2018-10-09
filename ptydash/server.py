@@ -81,6 +81,20 @@ class DataWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message(message)
 
 
+class CardUpdateHandler(tornado.web.RequestHandler):
+    """
+    Handler accepting POST requests from form cards.
+    """
+    def post(self, *args, **kwargs):
+        """
+        Accept POST request and pass form content to the correct Card.
+        """
+        card_id = self.get_body_argument('id')
+        card = self.application.layout.get_card_by_id(card_id)
+
+        card.handle_message(self.request.body_arguments)
+
+
 def main():
     # type: () -> None
     """
@@ -102,6 +116,7 @@ def main():
         [
             (r'/', DashboardHandler),
             (r'/data', DataWebSocket),
+            (r'/post', CardUpdateHandler),
         ],
         debug=config['app']['debug'],
         template_path=os.path.join(ptydash.PROJECT_ROOT, 'ptydash', 'templates'),
