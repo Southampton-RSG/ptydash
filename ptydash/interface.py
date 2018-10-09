@@ -142,7 +142,8 @@ class Plugin(type):
 
         for plugin_filename in os.listdir(os.path.join(ptydash.PROJECT_ROOT, plugin_dir)):
             module_name = plugin_filename.split('.')[0]
-            if module_name == '__init__':
+            # Exclude __init__.py and __pycache__
+            if module_name == '__init__' or module_name == '__pycache__':
                 continue
 
             # Importing a module causes its class definitions to be executed
