@@ -36,6 +36,6 @@ class MqttCard(ptydash.interface.card):
             client.loop_stop()
         return
 
-
+    template = 'modules/mqttcard.html'
 
 
