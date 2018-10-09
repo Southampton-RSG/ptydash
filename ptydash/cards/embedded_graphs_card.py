@@ -10,13 +10,14 @@ import matplotlib.pyplot as plt
 import paho.mqtt.client as mqtt
 import ptydash.interface
 
+
 class EmbeddedGraphsCard(ptydash.interface.Card):
     """
     create graphical images with embedded graphical images
     """
 
-    def __init__(self, id, text=None, update_delay=1000, hostname=None, topic_id=None, **kwargs):
-        super(EmbeddedGraphsCard, self).__init__(id, text, update_delay)
+    def __init__(self, text=None, update_delay=1000, hostname=None, topic_id=None, **kwargs):
+        super(EmbeddedGraphsCard, self).__init__(text, update_delay)
         self.data = None
         self.x_data_storage = []
         self.y_data_storage = []

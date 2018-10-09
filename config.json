@@ -1,13 +1,11 @@
 {
   "app": {
-    "autoreload": true,
     "debug": true,
     "port": 8888
   },
   "layout": [
     {
       "type": "ImageCard",
-      "id": "img-0",
       "text": "Temp and Humidity",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
@@ -15,7 +13,6 @@
     },
     {
       "type": "ImageCard",
-      "id": "img-1",
       "text": "Wind and Rain",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
@@ -23,32 +20,37 @@
     },
     {
       "type": "TextCard",
-      "id": "text-0",
       "text": "Lorem Ipsum"
     },
     {
       "type": "UpdateCounterCard",
-      "id": "ucc-0",
-      "text": null,
       "update_delay": 200
     },
     {
       "type": "EmbeddedGraphsCard",
-      "id": "img-2",
       "text": "X-ray Data Test",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
       "topic_id": "datadump/windandrain"
     },
     {
+      "type": "PtyPyClientCard",
+      "text": "PtyPy client",
+      "address": "tcp://127.0.0.1",
+      "port": 5560
+    },
+    {
+      "type": "PtyPyClientCard",
+      "text": "PtyPy client 2",
+      "address": "tcp://127.0.0.1",
+      "port": 5660
+    },
+    {
       "type": "MqttCard",
-      "id": "data-sender",
-      "text": "Mqtt data publisher",
+      "text": "Wind and Rain",
       "update_delay": 5000,
-      "clientname": "Mqtt-client",
       "hostname": "wonderbox.ecs.soton.ac.uk",
-      "topic_id": "datadump/testing",
-      "data_string": "this is my data, 1337"
+      "topic_id": "datadump/control"
     }
   ]
 }
