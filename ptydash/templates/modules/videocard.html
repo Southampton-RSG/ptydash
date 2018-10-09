@@ -1,4 +1,10 @@
 <div id="{{ object.id }}" class="card col-md-6">
+    <div class="card-header">
+        {% if object.title %}
+            {{ object.title }}
+        {% end %}
+    </div>
+
     <video controls
            poster="{{ static_url('img/logo_100px.png') }}">
         <source src="{{ object.source }}"

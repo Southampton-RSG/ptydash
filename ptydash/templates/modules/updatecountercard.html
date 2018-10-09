@@ -1,4 +1,10 @@
 <div id="{{ object.id }}" class="card col-md-6">
+    <div class="card-header">
+        {% if object.title %}
+            {{ object.title }}
+        {% end %}
+    </div>
+
     <div class="mx-auto">
         <div class="badge badge-primary">
             <span class="property-count"></span>

@@ -13,15 +13,15 @@ class UpdateCounterCard(ptydash.interface.Card):
     """
     template = 'modules/updatecountercard.html'
 
-    def __init__(self, text=None, update_delay=1000):
-        # type: (str, int) -> None
+    def __init__(self, title=None, text=None, update_delay=1000):
+        # type: (str, str, int) -> None
         """
         Initialize counter.
 
         :param text: Text associated with this element - usually a description or caption
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
-        super(UpdateCounterCard, self).__init__(text, update_delay)
+        super(UpdateCounterCard, self).__init__(title, text, update_delay)
 
         self.counter = 0
 

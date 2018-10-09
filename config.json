@@ -6,6 +6,7 @@
   "layout": [
     {
       "type": "ImageCard",
+      "title": "Temp and Humid",
       "text": "Test image 2",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",

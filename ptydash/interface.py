@@ -160,8 +160,8 @@ class Card(six.with_metaclass(Plugin, object)):
     """
     template = None
 
-    def __init__(self, text=None, update_delay=1000):
-        # type: (str, int) -> None
+    def __init__(self, title=None, text=None, update_delay=1000):
+        # type: (str, str, int) -> None
         """
         Init.
 
@@ -169,6 +169,7 @@ class Card(six.with_metaclass(Plugin, object)):
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
         self.id = str(uuid.uuid4())
+        self.title = title
         self.text = text
         self.update_delay = update_delay
 

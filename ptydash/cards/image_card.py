@@ -14,8 +14,8 @@ class ImageCard(ptydash.interface.Card):
     A Card representing a graph which auto-refreshes.
     """
 
-    def __init__(self, text=None, update_delay=1000, hostname=None, topic_id=None):
-        super(ImageCard, self).__init__(text, update_delay)
+    def __init__(self, title=None, text=None, update_delay=1000, hostname=None, topic_id=None):
+        super(ImageCard, self).__init__(title, text, update_delay)
         self.data = None
         self.x_data_storage = []
         self.y_data_storage = []

@@ -11,9 +11,9 @@ class PtyPyClientCard(ptydash.interface.Card):
     """
     template = 'modules/ptypyclientcard.html'
 
-    def __init__(self, text=None, update_delay=1000,
+    def __init__(self, title=None, text=None, update_delay=1000,
                  address=None, port=None):
-        # type: (str, int, str, int) -> None
+        # type: (str, str, int, str, int) -> None
         """
         Initialize PtyPy client and plotter.
 
@@ -28,7 +28,7 @@ class PtyPyClientCard(ptydash.interface.Card):
         except ImportError as exc:
             raise ptydash.interface.CardInitializationError(exc)
 
-        super(PtyPyClientCard, self).__init__(text, update_delay)
+        super(PtyPyClientCard, self).__init__(title, text, update_delay)
 
         self.plot_config = DEFAULT_autoplot.copy(depth=3)
 

@@ -1,4 +1,10 @@
 <div id="{{ object.id }}" class="card col-lg-12 col-xl-6">
+    <div class="card-header">
+        {% if object.title %}
+            {{ object.title }}
+        {% end %}
+    </div>
+
     <img src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
          class="property-image card-img-top img-fluid"
     />
