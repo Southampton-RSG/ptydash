@@ -28,7 +28,6 @@
     },
     {
       "type": "EmbeddedGraphsCard",
-      "id": "img-2",
       "text": "X-ray Data Test",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
