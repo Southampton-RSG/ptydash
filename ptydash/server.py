@@ -11,12 +11,18 @@ from __future__ import absolute_import, division, print_function
 import argparse
 import functools
 import json
+import logging
+import os
 
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
 
+import ptydash
 import ptydash.interface
+
+
+logger = logging.getLogger(__name__)
 
 
 class DashboardHandler(tornado.web.RequestHandler):
@@ -80,12 +86,15 @@ def main():
     """
     Initialise and run the PtyDash server.
     """
+    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+
     parser = argparse.ArgumentParser(description='Data dashboard and PtyPy monitor')
     parser.add_argument('config', nargs='?', default='config.json')
 
     args = parser.parse_args()
 
-    print('Reading config from \'{0}\''.format(args.config))
+    logger.info('Reading config from \'%(file)s\'',
+                {'file': args.config})
     with open(args.config) as config_file:
         config = json.load(config_file)
 
@@ -95,19 +104,20 @@ def main():
             (r'/data', DataWebSocket),
         ],
         debug=config['app']['debug'],
-        template_path='templates',
-        static_path='static',
+        template_path=os.path.join(ptydash.PROJECT_ROOT, 'ptydash', 'templates'),
+        static_path=os.path.join(ptydash.PROJECT_ROOT, 'ptydash', 'static'),
     )
 
     # Read UI layout from config
     app.layout = ptydash.interface.Layout.from_config(config)
 
-    print('Starting PtyDash server on http://localhost:{0}'.format(config['app']['port']))
+    logger.info('Starting PtyDash server on http://localhost:%(port)d',
+                {'port': config['app']['port']})
     try:
         app.listen(config['app']['port'])
         tornado.ioloop.IOLoop.current().start()
     except KeyboardInterrupt:
-        print('Shutting down...')
+        logger.info('Shutting down...')
 
 
 if __name__ == "__main__":

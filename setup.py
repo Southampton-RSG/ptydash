@@ -25,6 +25,13 @@ setuptools.setup(
     packages=setuptools.find_packages(
         exclude=['docs', 'tests', 'env*']
     ),
+    package_data={
+        'ptydash': [
+            'templates/*.html',
+            'templates/modules/*.html',
+            'static/img/logo_100px.png'
+        ]
+    },
     install_requires=[
         'matplotlib',
         'numpy',

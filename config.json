@@ -7,12 +7,16 @@
     {
       "type": "ImageCard",
       "text": "Test image 2",
-      "update_delay": 5000
+      "update_delay": 5000,
+      "hostname": "wonderbox.ecs.soton.ac.uk",
+      "topic_id": "datadump/tempAndHumid"
     },
     {
       "type": "ImageCard",
       "text": "Test image 1",
-      "update_delay": 5000
+      "update_delay": 5000,
+      "hostname": "wonderbox.ecs.soton.ac.uk",
+      "topic_id": "datadump/windandrain"
     },
     {
       "type": "TextCard",
