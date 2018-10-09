@@ -39,6 +39,16 @@
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
       "topic_id": "datadump/windandrain"
+    },
+    {
+      "type": "MqttCard",
+      "id": "data-sender",
+      "text": "Mqtt data publisher",
+      "update_delay": 5000,
+      "clientname": "Mqtt-client",
+      "hostname": "wonderbox.ecs.soton.ac.uk",
+      "topic_id": "datadump/testing",
+      "data_string": "this is my data, 1337"
     }
   ]
 }
