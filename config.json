@@ -13,10 +13,10 @@
     },
     {
       "type": "ImageCard",
-      "text": "Wind and Rain",
+      "text": "Wind over Time",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
-      "topic_id": "datadump/windandrain"
+      "topic_id": "datadump/wind"
     },
     {
       "type": "TextCard",
@@ -32,18 +32,6 @@
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
       "topic_id": "datadump/windandrain"
-    },
-    {
-      "type": "PtyPyClientCard",
-      "text": "PtyPy client",
-      "address": "tcp://127.0.0.1",
-      "port": 5560
-    },
-    {
-      "type": "PtyPyClientCard",
-      "text": "PtyPy client 2",
-      "address": "tcp://127.0.0.1",
-      "port": 5660
     },
     {
       "type": "MqttCard",

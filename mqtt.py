@@ -45,7 +45,6 @@ def send_mqtt():
         rainfall = random.randint(0,50)
         wind_and_rain = "Windspeed: " + str(windspeed) + " Rainfall: " + str(rainfall)
         print("sending data "+"Windspeed: " + str(windspeed) + " Rainfall: " + str(rainfall))
-        print(time.gmtime())
 
         #example publish setting
         client.publish("datadump/tempAndHumid",tempAndHumid)
