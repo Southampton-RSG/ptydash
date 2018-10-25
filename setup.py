@@ -38,6 +38,9 @@ setuptools.setup(
         'six',
         'tornado'
     ],
+    extras_require={
+        'docs': ['sphinx']
+    },
     python_requires='>=2.7',
     entry_points={
         'console_scripts': [
