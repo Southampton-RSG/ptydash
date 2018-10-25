@@ -6,14 +6,14 @@
   "layout": [
     {
       "type": "ImageCard",
-      "text": "Test image 2",
+      "text": "Temp and Humidity",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
       "topic_id": "datadump/tempAndHumid"
     },
     {
       "type": "ImageCard",
-      "text": "Test image 1",
+      "text": "Wind and Rain",
       "update_delay": 5000,
       "hostname": "wonderbox.ecs.soton.ac.uk",
       "topic_id": "datadump/windandrain"
@@ -27,6 +27,13 @@
       "update_delay": 200
     },
     {
+      "type": "EmbeddedGraphsCard",
+      "text": "X-ray Data Test",
+      "update_delay": 5000,
+      "hostname": "wonderbox.ecs.soton.ac.uk",
+      "topic_id": "datadump/windandrain"
+    },
+    {
       "type": "PtyPyClientCard",
       "text": "PtyPy client",
       "address": "tcp://127.0.0.1",
@@ -37,6 +44,13 @@
       "text": "PtyPy client 2",
       "address": "tcp://127.0.0.1",
       "port": 5660
+    },
+    {
+      "type": "MqttCard",
+      "text": "Wind and Rain",
+      "update_delay": 5000,
+      "hostname": "wonderbox.ecs.soton.ac.uk",
+      "topic_id": "datadump/control"
     }
   ]
 }
