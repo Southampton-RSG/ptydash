@@ -1,15 +1,17 @@
-<div id="{{ object.id }}" class="card col-md-6">
-    <div class="card-header">
-        {% if object.title %}
-            {{ object.title }}
+<div class="col-md-6">
+    <div id="{{ object.id }}" class="card">
+        <div class="card-header">
+            {% if object.title %}
+                {{ object.title }}
+            {% end %}
+        </div>
+
+        {% if object.text %}
+        <div class="card-body">
+            <div class="card-text">
+                {{ object.text }}
+            </div>
+        </div>
         {% end %}
     </div>
-
-    {% if object.text %}
-    <div class="card-body">
-        <div class="card-text">
-            {{ object.text }}
-        </div>
-    </div>
-    {% end %}
 </div>

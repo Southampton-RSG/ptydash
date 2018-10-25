@@ -2,6 +2,7 @@
 this script writes proxy data to an mqtt broker
 """
 
+import datetime
 import threading
 import time
 import random
@@ -44,11 +45,14 @@ def send_mqtt():
         windspeed = random.randint(0,100)
         rainfall = random.randint(0,50)
         wind_and_rain = "Windspeed: " + str(windspeed) + " Rainfall: " + str(rainfall)
+        wind = "Windspeed: " + str(windspeed) + " Timestamp: " + str(datetime.datetime.now())
         print("sending data "+"Windspeed: " + str(windspeed) + " Rainfall: " + str(rainfall))
+        print("sending data "+ wind)
 
         #example publish setting
         client.publish("datadump/tempAndHumid",tempAndHumid)
         client.publish("datadump/windandrain",wind_and_rain)
+        client.publish("datadump/wind",wind)
 
         time.sleep(5)
     return
@@ -67,10 +71,10 @@ def write_data():
 threads = []
 
 tMqtt = threading.Thread(target=send_mqtt)
-tWrite = threading.Thread(target=write_data)
+#tWrite = threading.Thread(target=write_data)
 
 threads.append(tMqtt)
-threads.append(tWrite)
+#threads.append(tWrite)
 
 tMqtt.start()
-tWrite.start()
+#tWrite.start()

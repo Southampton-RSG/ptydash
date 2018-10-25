@@ -1,56 +1,58 @@
-<div id="{{ object.id }}" class="card col-lg-12 col-xl-6">
-    <div class="card-header">
-        {% if object.title %}
-            {{ object.title }}
-        {% end %}
-    </div>
-
-    <img src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
-         class="property-image card-img-top img-fluid"
-    />
-
-    <div class="card-body">
-        {% if object.text %}
-        <div class="card-text">
-            <p>
-                {{ object.text }}
-            </p>
+<div class="col-lg-12 col-xl-6">
+    <div id="{{ object.id }}" class="card">
+        <div class="card-header">
+            {% if object.title %}
+                {{ object.title }}
+            {% end %}
         </div>
-        {% end %}
 
-        <table class="table">
-            <tbody>
-            <tr>
-                <td>Address</td>
-                <td>{{ object.client_config.address }}</td>
-            </tr>
-            <tr>
-                <td>Port</td>
-                <td>{{ object.client_config.port }}</td>
-            </tr>
-            <tr>
-                <td>Connected</td>
-                <td class="property-connected"></td>
-            </tr>
-            <tr>
-                <td>Status</td>
-                <td class="property-status"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <img src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
+             class="property-image card-img-top img-fluid"
+        />
 
-    <script type="application/javascript">
-        var element = document.getElementById("{{ object.id }}");
-        element.addEventListener("update", function(e) {
-            if (e.data != null) {
-                this.querySelector(".property-connected").textContent = e.data["connected"] ? "Yes" : "No";
-                this.querySelector(".property-status").textContent = e.data["status"];
+        <div class="card-body">
+            {% if object.text %}
+            <div class="card-text">
+                <p>
+                    {{ object.text }}
+                </p>
+            </div>
+            {% end %}
 
-                if (e.data["image"] !== null) {
-                    this.querySelector(".property-image").src = "data:image/png;base64," + e.data["image"];
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>Address</td>
+                    <td>{{ object.client_config.address }}</td>
+                </tr>
+                <tr>
+                    <td>Port</td>
+                    <td>{{ object.client_config.port }}</td>
+                </tr>
+                <tr>
+                    <td>Connected</td>
+                    <td class="property-connected"></td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td class="property-status"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script type="application/javascript">
+            var element = document.getElementById("{{ object.id }}");
+            element.addEventListener("update", function(e) {
+                if (e.data != null) {
+                    this.querySelector(".property-connected").textContent = e.data["connected"] ? "Yes" : "No";
+                    this.querySelector(".property-status").textContent = e.data["status"];
+
+                    if (e.data["image"] !== null) {
+                        this.querySelector(".property-image").src = "data:image/png;base64," + e.data["image"];
+                    }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
+    </div>
 </div>
