@@ -16,8 +16,6 @@ class EmbeddedGraphsCard(image_card.ImageCard):
     """
     Create graphical images with embedded graphical images.
     """
-    template = 'modules/embeddedgraphscard.html'
-
     def get_graph(self, data):
         """
         Process MQTT data stream output into graphical points.
