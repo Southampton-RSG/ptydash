@@ -4,9 +4,11 @@ This module processes mqtt data into graphical images
 
 import random
 import io
+from matplotlib import dates
 import matplotlib.pyplot as plt
 import paho.mqtt.client as mqtt
 import ptydash.interface
+import datetime
 
 class ImageCard(ptydash.interface.Card):
     """
@@ -80,12 +82,58 @@ class ImageCard(ptydash.interface.Card):
         # we want value 1 and value 2, we'll use the headers in a mo.
         self.data_list = str.split(data)
 
+        if len(self.data_list) >= 5:
+            # grab the time data
+            date = self.data_list[3]
+            time = self.data_list[4]
+            dateandtime = date + " " + time
+
+            # convert dateandtime to datetime
+            dataTime = datetime.datetime.strptime(dateandtime, '%Y-%m-%d %H:%M:%S.%f')
+
+            ## this bit might not work
+            ## but it might
+            ## not tested it.
+            """
+            days = dates.DayLocator()
+            hours = dates.HourLocator(interval=3)
+            dfmt = dates.DateFormatter('              %b %d')
+
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            ax.xaxis.set_major_locator(days)
+            ax.xaxis.set_major_formatter(dfmt)
+            ax.xaxis.set_minor_locator(hours)
+            ax.grid(True)
+            """
+            ## end of bit that may not work
+            ## or might work
+            ## it wasn't tested so dont know...
+
+            # create the graph
+            plt.xlabel(self.data_list[2])  # set xlabel to timestamp
+            plt.ylabel(self.data_list[0])  # set ylabel to Y value header
+
+            # add the data values to a list to populate the graph
+            self.x_data_storage.append(dataTime)
+            self.y_data_storage.append(int(self.data_list[1]))
+            # plot the graph
+            plt.plot(self.x_data_storage, self.y_data_storage)
+
+            # plot graph
+            buffer = io.BytesIO()
+            plt.savefig(buffer, format='png')
+            plt.close()
+            buffer.seek(0)
+
+            graph_encoded = ptydash.interface.bytes_to_base64(buffer.read())
+            return graph_encoded
+
         # add the data values to a list to populate the graph
         self.x_data_storage.append(int(self.data_list[1]))
         self.y_data_storage.append(int(self.data_list[3]))
 
         # create the graph
-        # set graph info before plotting/scattering
         plt.axis([0, 100, 0, 100])  # fix axis scale 0-100
         plt.xlabel(self.data_list[0])  # set xlabel to header 1
         plt.ylabel(self.data_list[2])  # set ylabel to header 2
