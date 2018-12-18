@@ -21,10 +21,13 @@ class PtyPyClientCard(ptydash.interface.Card):
         :param update_delay: Delay between UI updates for this card in milliseconds
         """
         try:
-            from ptypy.core.ptycho import DEFAULT_autoplot
-            from ptypy.io.interaction import Client_DEFAULT
+            import ptypy
             from ptypy.utils import plot_client
             from ptypy.utils.parameters import Param
+
+            DEFAULT_autoplot = ptypy.core.Ptycho.DEFAULT.io.autoplot
+            Client_DEFAULT = ptypy.io.interaction.Client.DEFAULT
+
         except ImportError as exc:
             raise ptydash.interface.CardInitializationError(exc)
 
