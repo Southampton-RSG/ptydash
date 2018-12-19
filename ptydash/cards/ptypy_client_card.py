@@ -10,6 +10,7 @@ class PtyPyClientCard(ptydash.interface.Card):
     A Card representing a PtyPy client which auto-refreshes.
     """
     template = 'modules/ptypyclientcard.html'
+    help_string = 'This card displays the progress of a running PtyPy image reconstruction'
 
     def __init__(self, text=None, update_delay=1000,
                  address=None, port=None):

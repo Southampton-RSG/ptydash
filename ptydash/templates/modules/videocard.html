@@ -1,4 +1,6 @@
-<div id="{{ object.id }}" class="card col-md-6">
+{% extends 'base_card.html' %}
+
+{% block card_body %}
     <video controls
            poster="{{ static_url('img/logo_100px.png') }}">
         <source src="{{ object.source }}"
@@ -12,4 +14,4 @@
         </div>
     </div>
     {% end %}
-</div>
+{% end %}

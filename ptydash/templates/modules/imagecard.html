@@ -1,4 +1,6 @@
-<div id="{{ object.id }}" class="card col-md-6">
+{% extends 'base_card.html' %}
+
+{% block card_body %}
     <img src="{{ static_url('img/logo_100px.png') }}" alt="Graph"
          class="property-image card-img-top img-fluid"
     />
@@ -19,4 +21,4 @@
             }
         });
     </script>
-</div>
+{% end %}

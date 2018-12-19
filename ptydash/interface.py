@@ -175,6 +175,7 @@ class Card(six.with_metaclass(Plugin, object)):
     #: Name of the HTML template which renders this :class:`Card`, relative to the PtyDash template directory.
     #: Subclasses of :class:`Card` **must** define this attribute.
     template = None
+    help_string = None
 
     def __init__(self, text=None, update_delay=1000):
         # type: (str, int) -> None
