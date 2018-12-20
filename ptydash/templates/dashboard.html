@@ -4,7 +4,7 @@
 
 {% block extra_head %}
 <script type="application/javascript">
-    window.onload = function() {
+    $(document).ready(function() {
         const ws = new WebSocket("ws://localhost:8888/data");
         ws.binaryType = "arraybuffer";
 
@@ -18,7 +18,7 @@
         };
 
         window.ws = ws;
-    };
+    });
 
     function toggleState(objectId) {
         const card = document.getElementById(objectId);
