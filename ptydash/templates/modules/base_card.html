@@ -1,0 +1,21 @@
+<div id="{{ object.id }}" class="card col-sm-6 col-lg-4 col-xl-3 p-0">
+    <div class="card-header d-flex justify-content-between">
+        {{ object.__class__.__name__ }}
+
+        <span>
+            {% if object.help_string %}
+                <button type="button" class="btn"
+                        data-toggle="popover" data-content="{{ object.help_string }}">
+                    <i class="fas fa-question"></i>
+                </button>
+            {% end %}
+
+            <button type="button" class="btn">
+                <i class="fas fa-play"></i>
+            </button>
+        </span>
+    </div>
+
+    {% block card_body %}
+    {% end %}
+</div>
