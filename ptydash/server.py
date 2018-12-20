@@ -33,6 +33,23 @@ class DashboardHandler(tornado.web.RequestHandler):
         self.render('dashboard.html', layout=self.application.layout)
 
 
+class CardStateChangeHandler(tornado.web.RequestHandler):
+    """
+    Handler to pause and resume card updates.
+    """
+    def post(self, *args, **kwargs):
+        card_id = self.get_argument('id')
+        state = self.get_argument('state')
+
+        card = self.application.layout.get_card_by_id(card_id)
+
+        if state == 'stop':
+            card.callback.stop()
+
+        elif state == 'start':
+            card.callback.start()
+
+
 class DataWebSocket(tornado.websocket.WebSocketHandler):
     """
     Handler for WebSocket passing data to frontend.
@@ -115,6 +132,7 @@ def main():
     handlers = [
         (r'/data', DataWebSocket),
         (r'/post', CardUpdateHandler),
+        (r'/state', CardStateChangeHandler),
         (r'/', DashboardHandler),
     ]
 

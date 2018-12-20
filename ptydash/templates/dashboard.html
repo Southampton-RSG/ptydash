@@ -19,6 +19,49 @@
 
         window.ws = ws;
     };
+
+    function toggleState(objectId) {
+        const card = document.getElementById(objectId);
+        const currState = card.dataset.state;
+
+        if (currState === "running") {
+            $.post(
+                "http://localhost:8888/state",
+                {
+                    id: objectId,
+                    state: "stop"
+                },
+                function(){
+                    const stateBtn = card.getElementsByClassName("btn-state")[0];
+                    const playIcon = stateBtn.getElementsByClassName("icon-play")[0];
+                    const pauseIcon = stateBtn.getElementsByClassName("icon-pause")[0];
+
+                    playIcon.setAttribute("hidden", true);
+                    pauseIcon.removeAttribute("hidden");
+
+                    card.dataset.state = "paused";
+                }
+            )
+        } else if (currState === "paused") {
+            $.post(
+                "http://localhost:8888/state",
+                {
+                    id: objectId,
+                    state: "start"
+                },
+                function(){
+                    const stateBtn = card.getElementsByClassName("btn-state")[0];
+                    const playIcon = stateBtn.getElementsByClassName("icon-play")[0];
+                    const pauseIcon = stateBtn.getElementsByClassName("icon-pause")[0];
+
+                    playIcon.removeAttribute("hidden");
+                    pauseIcon.setAttribute("hidden", true);
+
+                    card.dataset.state = "running";
+                }
+            )
+        }
+    }
 </script>
 {% end %}
 

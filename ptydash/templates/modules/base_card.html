@@ -1,4 +1,4 @@
-<div id="{{ object.id }}" class="card col-sm-6 col-lg-4 col-xl-3 p-0">
+<div id="{{ object.id }}" class="card col-sm-6 col-lg-4 col-xl-3 p-0" data-state="running">
     <div class="card-header d-flex justify-content-between">
         {{ object.__class__.__name__ }}
 
@@ -10,8 +10,9 @@
                 </button>
             {% end %}
 
-            <button type="button" class="btn">
-                <i class="fas fa-play"></i>
+            <button type="button" class="btn btn-state" onclick="toggleState('{{ object.id }}');">
+                <i class="fas fa-play icon-play"></i>
+                <i class="fas fa-pause icon-pause" hidden="true"></i>
             </button>
         </span>
     </div>
