@@ -18,7 +18,7 @@
     <script type="application/javascript">
         var element = document.getElementById("{{ object.id }}");
         element.addEventListener("update", function(e) {
-            if (e.data != null) {
+            if (e.data !== null) {
                 this.querySelector(".property-count").textContent = e.data["count"];
             }
         });

@@ -16,7 +16,7 @@
     <script type="application/javascript">
         var element = document.getElementById("{{ object.id }}");
         element.addEventListener("update", function(e) {
-            if (e.data != null) {
+            if (e.data !== null && e.data["image"] !== null) {
                 this.querySelector(".property-image").src = "data:image/png;base64," + e.data["image"];
             }
         });

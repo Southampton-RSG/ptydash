@@ -39,7 +39,7 @@
     <script type="application/javascript">
         var element = document.getElementById("{{ object.id }}");
         element.addEventListener("update", function(e) {
-            if (e.data != null) {
+            if (e.data !== null) {
                 this.querySelector(".property-connected").textContent = e.data["connected"] ? "Yes" : "No";
                 this.querySelector(".property-status").textContent = e.data["status"];
 
