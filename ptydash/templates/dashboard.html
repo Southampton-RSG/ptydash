@@ -26,7 +26,7 @@
 
         if (currState === "running") {
             $.post(
-                "http://localhost:8888/state",
+                "/state",
                 {
                     id: objectId,
                     state: "stop"
@@ -44,7 +44,7 @@
             )
         } else if (currState === "paused") {
             $.post(
-                "http://localhost:8888/state",
+                "/state",
                 {
                     id: objectId,
                     state: "start"
