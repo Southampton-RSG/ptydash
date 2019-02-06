@@ -98,6 +98,7 @@ class Layout(list):
                 card = Card.get_plugin(card_type)(**item)
                 obj.append(card)
             except CardInitializationError as exc:
+                # Continue without adding Card to layout
                 logger.error('Initializing card type \'%(card_type)s\' failed: %(message)s',
                              {'card_type': card_type, 'message': exc})
 
@@ -105,12 +106,18 @@ class Layout(list):
 
     def get_card_by_id(self, card_id):
         # type: (str) -> Card
-        matches = filter(lambda x: x.id == card_id, self)
+        """
+        Find a Card within this layout by id.
+
+        :param card_id: Card id
+        :return: Card with matching id
+        """
+        matches = [card for card in self if card.id == card_id]
 
         if len(matches) == 1:
             return matches[0]
 
-        elif len(matches) < 0:
+        if len(matches) < 0:
             raise ValueError('Card with id ' + card_id + ' does not exist')
 
         else:
@@ -126,6 +133,8 @@ class Plugin(type):
         """
         Register all concrete subclasses when they are defined.
         """
+        super(Plugin, cls).__init__(name, bases, attrs)
+
         if not hasattr(cls, '_plugins'):
             cls._plugins = {}
 
@@ -157,7 +166,7 @@ class Plugin(type):
         for plugin_filename in os.listdir(os.path.join(ptydash.PROJECT_ROOT, plugin_dir)):
             module_name = plugin_filename.split('.')[0]
             # Exclude __init__.py and __pycache__
-            if module_name == '__init__' or module_name == '__pycache__':
+            if module_name in {'__init__', '__pycache__'}:
                 continue
 
             # Importing a module causes its class definitions to be executed
