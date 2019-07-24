@@ -4,6 +4,7 @@ This module processes MQTT data into graphical images
 
 import datetime
 import io
+import socket
 import uuid
 
 import matplotlib.pyplot as plt
@@ -30,7 +31,11 @@ class ImageCard(ptydash.interface.Card):
         self.data_list = []
 
         self.client_name = "PtyDashClient-" + str(uuid.uuid4())
-        self._client = self.mqtt_subscribe()
+        try:
+            self._client = self.mqtt_subscribe()
+
+        except socket.error:
+            raise ptydash.interface.CardInitializationError('Failed to connect to MQTT broker')
 
     def mqtt_subscribe(self):
         """
@@ -65,7 +70,7 @@ class ImageCard(ptydash.interface.Card):
         if data is None:
             return None
 
-        # TODO inject function to process expected fomat into k-v mapping
+        # TODO inject function to process expected format into k-v mapping
         # split mqtt message stream into manageable chunks
         # header:, value, header:, value
         # we want value 1 and value 2, we'll use the headers in a mo.
@@ -79,32 +84,17 @@ class ImageCard(ptydash.interface.Card):
 
             timestamp = datetime.datetime.strptime(dateandtime, '%Y-%m-%d %H:%M:%S.%f')
 
-            ## this bit might not work
-            ## but it might
-            ## not tested it.
-            """
-            days = dates.DayLocator()
-            hours = dates.HourLocator(interval=3)
-            dfmt = dates.DateFormatter('              %b %d')
-
+            # TODO set datetime labels on axis
             fig = plt.figure()
             ax = fig.add_subplot(111)
-            ax.xaxis.set_major_locator(days)
-            ax.xaxis.set_major_formatter(dfmt)
-            ax.xaxis.set_minor_locator(hours)
-            ax.grid(True)
-            """
-            ## end of bit that may not work
-            ## or might work
-            ## it wasn't tested so dont know...
 
-            plt.xlabel(self.data_list[2])  # set xlabel to timestamp
-            plt.ylabel(self.data_list[0])  # set ylabel to Y value header
+            ax.set_xlabel(self.data_list[2])  # set xlabel to timestamp
+            ax.set_ylabel(self.data_list[0])  # set ylabel to Y value header
 
             self.x_data_storage.append(timestamp)
             self.y_data_storage.append(int(self.data_list[1]))
 
-            plt.plot(self.x_data_storage, self.y_data_storage)
+            ax.plot(self.x_data_storage, self.y_data_storage)
 
         else:
             self.x_data_storage.append(int(self.data_list[1]))
