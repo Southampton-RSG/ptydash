@@ -3,6 +3,8 @@
 This script writes test data to an MQTT broker
 """
 
+from __future__ import print_function
+
 import datetime
 import random
 import threading
@@ -38,7 +40,7 @@ def send_mqtt(client, mqtt_broker, log_path):
 
 
 if __name__ == '__main__':
-    mqtt_broker = "wonderbox.ecs.soton.ac.uk"
+    mqtt_broker = "localhost"
     client_name = "PtyDash Test Client"
     log_path = "log.txt"
 
